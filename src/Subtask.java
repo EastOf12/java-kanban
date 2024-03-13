@@ -1,18 +1,49 @@
 public class Subtask extends Task{
-    int idEpic;
+    private int idEpic;
 
-    public Subtask(String title, String description, int idTask, TaskStatus status, int idEpic) {
-        super(title, description, idTask, status);
+    public Subtask(String title, String description, int idEpic) {
+        super(title, description);
         this.idEpic = idEpic;
+    }
+
+
+    public final int getIdEpic() {
+        return idEpic;
+    }
+
+    public final void setIdEpic(int idEpic) {
+        this.idEpic = idEpic;
+    }
+
+    public final void setStatusSubtask(TaskStatus status) {
+        this.setStatus(status);
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        if (this == object) return true;
+        if (object == null || getClass() != object.getClass()) return false;
+        if (!super.equals(object)) return false;
+
+        Subtask subtask = (Subtask) object;
+
+        return idEpic == subtask.idEpic;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = super.hashCode();
+        result = 31 * result + idEpic;
+        return result;
     }
 
     @Override
     public String toString() {
         return "Subtask{" +
-                "title='" + title + '\'' +
-                ", description='" + description + '\'' +
-                ", idTask= '" + idTask + '\'' +
-                ", status='" + status + '\'' +
+                "title='" + getTitle() + '\'' +
+                ", description='" + getDescription() + '\'' +
+                ", idTask= '" + getIdTask() + '\'' +
+                ", status='" + getStatus() + '\'' +
                 ", idEpic='" + idEpic +
                 "'}";
     }
