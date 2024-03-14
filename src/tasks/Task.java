@@ -9,6 +9,7 @@ public class Task {
     public Task(String title, String description) {
         this.title = title;
         this.description = description;
+        status = TaskStatus.NEW;
     }
 
     public String getTitle() {
@@ -67,7 +68,7 @@ public class Task {
 
     @Override
     public String toString() {
-        return "tasks.Task{" +
+        return "task.Task{" +
                 "title='" + title + '\'' +
                 ", description='" + description + '\'' +
                 ", idTask= '" + idTask + '\'' +

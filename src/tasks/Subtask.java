@@ -13,14 +13,6 @@ public class Subtask extends Task{
         return idEpic;
     }
 
-    public final void setIdEpic(int idEpic) {
-        this.idEpic = idEpic;
-    }
-
-    public final void setStatusSubtask(TaskStatus status) {
-        this.setStatus(status);
-    }
-
     @Override
     public boolean equals(Object object) {
         if (this == object) return true;
@@ -41,7 +33,7 @@ public class Subtask extends Task{
 
     @Override
     public String toString() {
-        return "tasks.Subtask{" +
+        return "task.Subtask{" +
                 "title='" + getTitle() + '\'' +
                 ", description='" + getDescription() + '\'' +
                 ", idTask= '" + getIdTask() + '\'' +
