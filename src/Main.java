@@ -1,3 +1,8 @@
+import manager.TaskManager;
+import tasks.Epic;
+import tasks.Subtask;
+import tasks.Task;
+
 public class Main {
 
     public static void main(String[] args) {
@@ -36,9 +41,6 @@ public class Main {
         System.out.println("\nВсе таски " + taskManager.getAllTask());
         System.out.println("Все эпики " + taskManager.getAllEpic());
         System.out.println("Все подзадачи " + taskManager.getAllSubtask());
-
-
-
 
     }
 }

@@ -1,3 +1,10 @@
+package manager;
+
+import tasks.Epic;
+import tasks.Subtask;
+import tasks.Task;
+import tasks.TaskStatus;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -6,9 +13,9 @@ public class TaskManager {
     private int taskId;
 
     //1.Хранить все 3 типа задач. Формируем 3 списка с задачами.
-    private HashMap<Integer, Epic> allEpic;
-    private HashMap<Integer, Subtask> allSubtask;
-    private HashMap<Integer, Task> allTask;
+    private final HashMap<Integer, Epic> allEpic;
+    private final HashMap<Integer, Subtask> allSubtask;
+    private final HashMap<Integer, Task> allTask;
 
     public TaskManager() {
         allEpic = new HashMap<>();
@@ -17,28 +24,28 @@ public class TaskManager {
         taskId = 0;
     }
 
-    //Методы Task
-    public HashMap<Integer, Task> getAllTask() {
+    //Методы tasks.Task
+    public final HashMap<Integer, Task> getAllTask() {
         return allTask;
     } // Получить все таски.
 
-    public HashMap<Integer, Task> clearAllTask() {
+    public final HashMap<Integer, Task> clearAllTask() {
         allTask.clear();
         return allTask;
     } // Очистить все таски.
 
-    public void createTask(Task task) {
+    public final void createTask(Task task) {
         taskId = addTaskID();
         task.setIdTask(taskId);
         task.setStatus(TaskStatus.NEW);
         allTask.put(taskId, task);
     } // Создать новый таск.
 
-    public Task getTask(int idTask) {
+    public final Task getTask(int idTask) {
         return allTask.get(idTask);
     } // Получить таск по id.
 
-    public boolean removalTask(int idTask) {
+    public final boolean removalTask(int idTask) {
         if(allTask.containsKey(idTask)){
             allTask.remove(idTask);
             return true;
@@ -46,7 +53,7 @@ public class TaskManager {
         return false;
         } // Удаляем таск по id.
 
-    public boolean updateTask(Task task) {
+    public final boolean updateTask(Task task) {
         if(allTask.containsKey(task.getIdTask())) {
             allTask.put(task.getIdTask(), task);
             return true;
@@ -54,28 +61,28 @@ public class TaskManager {
         return false;
     } // Обновляем таск.
 
-    //Методы Epic
-    public HashMap<Integer, Epic> getAllEpic() {
+    //Методы tasks.Epic
+    public final HashMap<Integer, Epic> getAllEpic() {
         return allEpic;
     } // Получить все эпики.
 
-    public void clearAllEpic() {
+    public final void clearAllEpic() {
         allSubtask.clear();
         allEpic.clear();
     } // Очистить все эпики.
 
-    public void createEpic(Epic epic) {
+    public final void createEpic(Epic epic) {
         taskId = addTaskID();
         epic.setIdTask(taskId);
         epic.setStatus(TaskStatus.NEW);
         allEpic.put(taskId, epic);
     } // Создать новый эпик.
 
-    public Epic getEpic(int idTask) {
+    public final Epic getEpic(int idTask) {
         return allEpic.get(idTask);
     } // Получить эпик по id
 
-    public boolean removalEpic(int idTask) {
+    public final boolean removalEpic(int idTask) {
         if(allEpic.containsKey(idTask)){
             for (Integer idSubtask: getEpic(idTask).getSubtasks()) {
                 allSubtask.remove(idSubtask);
@@ -86,7 +93,7 @@ public class TaskManager {
         return false;
     } // Удалить эпик по id.
 
-    public boolean updateEpic(Epic epic) {
+    public final boolean updateEpic(Epic epic) {
         if(allEpic.containsKey(epic.getIdTask())) {
             updateStatusEpic(epic);
             allEpic.put(epic.getIdTask(), epic);
@@ -95,7 +102,7 @@ public class TaskManager {
         return false;
     } // Обновляем эпик.
 
-    public void updateStatusEpic(Epic epic) {
+    public final void updateStatusEpic(Epic epic) {
         if(epic.getSubtasks().isEmpty()) {
             epic.setStatus(TaskStatus.NEW);
             return;
@@ -123,18 +130,18 @@ public class TaskManager {
         }
     } // Обновить статус эпика.
 
-    //Методы Subtask
+    //Методы tasks.Subtask
 
-    public HashMap<Integer, Subtask> getAllSubtask() {
+    public final HashMap<Integer, Subtask> getAllSubtask() {
         return allSubtask;
     } // Получить все подзадачи.
 
-    public void clearAllSubtask() {
+    public final void clearAllSubtask() {
         allSubtask.clear();
         clearAllEpic();
     } // Очистить все подзадачи.
 
-    public boolean createSubtask(Subtask subtask) {
+    public final boolean createSubtask(Subtask subtask) {
         int idEpicSubtask = subtask.getIdEpic();
 
         if(allEpic.containsKey(idEpicSubtask)) {
@@ -151,11 +158,11 @@ public class TaskManager {
         return false;
     } // Создать новую подзадачу.
 
-    public Subtask getSubtask(int idTask) {
+    public final Subtask getSubtask(int idTask) {
         return allSubtask.get(idTask);
     } // Получить подзадачу по id.
 
-    public boolean removalSubtask(int idTask) {
+    public final boolean removalSubtask(int idTask) {
         if(allSubtask.containsKey(idTask)){
             Subtask subtask = allSubtask.get(idTask);
             int idEpic = subtask.getIdEpic();
@@ -168,7 +175,7 @@ public class TaskManager {
         return false;
     } //Удалить подзадачу по id.
 
-    public boolean updateSubtask(Subtask subtask) {
+    public final boolean updateSubtask(Subtask subtask) {
         if(allSubtask.containsKey(subtask.getIdTask())) {
             allSubtask.put(subtask.getIdTask(), subtask);
             int idEpic = subtask.getIdEpic();
@@ -179,7 +186,7 @@ public class TaskManager {
         return false;
     } // Обновляем подзадачу.
 
-    public ArrayList<Subtask> getSubtaskEpic(int idEpic) {
+    public final ArrayList<Subtask> getSubtaskEpic(int idEpic) {
         if(!allEpic.containsKey(idEpic)) {
             return null;
         }

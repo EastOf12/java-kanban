@@ -1,22 +1,24 @@
-public class Subtask extends Task{
-    private int idEpic;
+package tasks;
 
-    public Subtask(String title, String description, int idEpic) {
+import java.util.ArrayList;
+
+public class Epic extends Task{
+    private final ArrayList<Integer> subtasks;
+    public Epic(String title, String description) {
         super(title, description);
-        this.idEpic = idEpic;
+        subtasks = new ArrayList<>();
     }
 
-
-    public final int getIdEpic() {
-        return idEpic;
+    public final ArrayList<Integer> getSubtasks() {
+        return subtasks;
     }
 
-    public final void setIdEpic(int idEpic) {
-        this.idEpic = idEpic;
+    public final void setSubtasks(Integer idSubtask) {
+        subtasks.add(idSubtask);
     }
 
-    public final void setStatusSubtask(TaskStatus status) {
-        this.setStatus(status);
+    public final void removeIdSubtasks(Integer idSubtask) {
+        subtasks.remove(idSubtask);
     }
 
     @Override
@@ -25,26 +27,26 @@ public class Subtask extends Task{
         if (object == null || getClass() != object.getClass()) return false;
         if (!super.equals(object)) return false;
 
-        Subtask subtask = (Subtask) object;
+        Epic epic = (Epic) object;
 
-        return idEpic == subtask.idEpic;
+        return subtasks.equals(epic.subtasks);
     }
 
     @Override
     public int hashCode() {
         int result = super.hashCode();
-        result = 31 * result + idEpic;
+        result = 31 * result + subtasks.hashCode();
         return result;
     }
 
     @Override
     public String toString() {
-        return "Subtask{" +
+        return "tasks.Epic{" +
                 "title='" + getTitle() + '\'' +
                 ", description='" + getDescription() + '\'' +
                 ", idTask= '" + getIdTask() + '\'' +
                 ", status='" + getStatus() + '\'' +
-                ", idEpic='" + idEpic +
+                ", subtasks='" + subtasks +
                 "'}";
     }
 }
