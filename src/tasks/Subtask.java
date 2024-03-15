@@ -9,9 +9,10 @@ public class Subtask extends Task{
     }
 
 
-    public final int getIdEpic() {
+    public int getIdEpic() {
         return idEpic;
     }
+
 
     @Override
     public boolean equals(Object object) {
