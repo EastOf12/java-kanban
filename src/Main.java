@@ -1,3 +1,6 @@
+import manager.HistoryManager;
+import manager.InMemoryHistoryManager;
+import manager.Managers;
 import manager.TaskManager;
 import tasks.Epic;
 import tasks.Subtask;
@@ -9,10 +12,10 @@ public class Main {
         System.out.println("Поехали!");
 
         //Создаем объект менеджера.
-        TaskManager taskManager = new TaskManager();
+        TaskManager taskManager = Managers.getDefault();
 
         //Задачи.
-        Task task1 = new Task("Найти работу", "Найти работу с зарплатой 100к");
+        Task task1 = new Task("Найти работу", "Найти работу с зарплатой 1000к");
         Task task2 = new Task("Сходить в магазин", "Купить еду в магазине");
         taskManager.createTask(task1);
         taskManager.createTask(task2);
@@ -29,18 +32,16 @@ public class Main {
         taskManager.createSubtask(subtask1);
         taskManager.createSubtask(subtask2);
 
-        System.out.println("Все таски " + taskManager.getAllTask());
-        System.out.println("Все эпики " + taskManager.getAllEpic());
-        System.out.println("Все подзадачи " + taskManager.getAllSubtask());
-
-        //Удаляем эпик.
-        System.out.println("Удаляем эпик");
-        taskManager.removalEpic(3);
-
-
         System.out.println("\nВсе таски " + taskManager.getAllTask());
         System.out.println("Все эпики " + taskManager.getAllEpic());
         System.out.println("Все подзадачи " + taskManager.getAllSubtask());
+
+        System.out.println("Отображаем историю просмотра тасков.");
+        taskManager.getTask(1);
+        taskManager.getTask(2);
+        taskManager.getEpic(4);
+        taskManager.getSubtask(6);
+        System.out.println(taskManager.getHistory());
 
     }
 }
