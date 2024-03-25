@@ -32,24 +32,6 @@ class InMemoryTaskManagerTest {
     }
 
     @Test
-    public void shouldReturnPositiveWhenTaskEqual() {
-        Assertions.assertEquals(taskManager.getTask(1), taskManager.getTask(1)
-                , "Разные таски с одинаковым id.");
-    }
-
-    @Test
-    public void shouldReturnPositiveWhenEpicEqual() {
-        Assertions.assertEquals(taskManager.getEpic(3), taskManager.getEpic(3)
-                , "Разные эпики с одинаковым id.");
-    }
-
-    @Test
-    public void shouldReturnPositiveWhenSubtaskEqual() {
-        Assertions.assertEquals(taskManager.getSubtask(5), taskManager.getSubtask(5)
-                , "Разные подзадачи с одинаковым id.");
-    }
-
-    @Test
     public void shouldReturnPositiveWhenSubtaskDontAddSubtask() {
         Subtask subtask3 = new Subtask("Дать всем еды", "Накормить всех", 5);
         Assertions.assertFalse(taskManager.createSubtask(subtask3));
@@ -117,7 +99,7 @@ class InMemoryTaskManagerTest {
 
         Subtask subtask = taskManager.getSubtask(5);
 
-        Assertions.assertEquals(subtask.getTitle(), title, "Названин при создании отличаются");
+        Assertions.assertEquals(subtask.getTitle(), title, "Название при создании отличаются");
         Assertions.assertEquals(subtask.getDescription(), description, "Описание при создании отличаются");
     }
 
