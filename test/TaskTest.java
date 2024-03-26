@@ -31,9 +31,6 @@ public class TaskTest {
         taskExpected.setIdTask(1);
         Task taskActual = taskManager.getTask(1);
 
-        System.out.println(taskExpected);
-        System.out.println(taskActual);
-
         //Сраниваем таски с одинаковым ID.
         Assertions.assertEquals(taskExpected, taskActual, "Таски с одинаковыми id не равны");
     }
