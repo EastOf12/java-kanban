@@ -1,5 +1,3 @@
-package Test;
-
 import manager.Managers;
 import manager.TaskManager;
 import org.junit.jupiter.api.Assertions;
@@ -10,7 +8,7 @@ import tasks.Epic;
 import tasks.Subtask;
 import tasks.Task;
 
-public class TaskTest {
+public class TaskExpectedTest {
     private static final TaskManager taskManager = Managers.getDefault();
 
     @BeforeEach
@@ -25,30 +23,15 @@ public class TaskTest {
     }
 
     @Test
-    public void shouldReturnPositiveWhenSimilarIdTaskNotEqualEpic() {
-
-        //Получаем объекты типа Task
-        Task taskExpected = taskManager.getTask(1);
-        Task taskActual = taskManager.getEpic(2);
-
-        //Делаем их ID одинаковыми.
-        taskExpected.setIdTask(2);
-
-        //Сраниваем таск и эпик с одинаковым ID.
-        Assertions.assertNotEquals(taskExpected, taskActual, "Таск равен эпику с одинаковым id.");
-    }
-
-    @Test
-    public void shouldReturnPositiveWhenSimilarIdTaskNotEqualSubtask() {
-
-        //Получаем объекты типа Task
-        Task taskExpected = taskManager.getTask(1);
-        Task taskActual = taskManager.getSubtask(3);
+    public void shouldReturnPositiveWhenSimilarIdSubtaskNotEqualEpic() {
+        //Получаем объекты Epic, Subtask
+        Epic taskExpected = taskManager.getEpic(2);
+        Subtask taskActual = taskManager.getSubtask(3);
 
         //Делаем их ID одинаковыми.
         taskExpected.setIdTask(3);
 
-        //Сраниваем таск и подзадачу с одинаковым ID.
-        Assertions.assertNotEquals(taskExpected, taskActual, "Таск равен подзадаче с одинаковым id.");
+        //Сраниваем таск и эпик с одинаковым ID.
+        Assertions.assertNotEquals(taskExpected, taskActual, "Таск равен эпику с одинаковым id.");
     }
 }

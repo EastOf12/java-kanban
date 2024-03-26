@@ -1,9 +1,7 @@
-package Test;
-
 import manager.Managers;
 import manager.TaskManager;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import tasks.Epic;
 import tasks.Subtask;
@@ -12,16 +10,18 @@ import tasks.Task;
 import static org.junit.jupiter.api.Assertions.*;
 
 class InMemoryTaskManagerTest {
-    private static final TaskManager taskManager = Managers.getDefault();
+    private static TaskManager taskManager;
 
-    @BeforeAll
-    public static void BeforeAll() {
+    @BeforeEach
+    public void beforeEach() {
+        taskManager = Managers.getDefault();
         Task task1 = new Task("Найти работу", "Найти работу с зарплатой 1000к");
         Task task2 = new Task("Сходить в магазин", "Купить еду в магазине");
         Epic epic1 = new Epic("Построить мир", "Организовать мир во всем мире.");
         Epic epic2 = new Epic("Полететь на марс", "Прилететь на марс и организовать там колонию.");
         Subtask subtask1 = new Subtask("Убрать войны", "Убрать все оружие в мире", 3);
         Subtask subtask2 = new Subtask("Дать всем еды", "Накормить всех", 3);
+
 
         taskManager.createTask(task1);
         taskManager.createTask(task2);
@@ -57,11 +57,11 @@ class InMemoryTaskManagerTest {
 
     @Test
     public void shouldReturnPositiveWhenSaveHistory() {
-        Assertions.assertNull(taskManager.getHistory());
+        Assertions.assertTrue(taskManager.getHistory().isEmpty(), "Список не пуст.");
 
-        Task task = taskManager.getTask(1);
+        taskManager.getTask(1);
         Epic epic = taskManager.getEpic(3);
-        Subtask subtask = taskManager.getSubtask(5);
+        taskManager.getSubtask(5);
 
         Assertions.assertEquals(taskManager.getHistory().size(), 3
                 , "Количество просмотренных задач не соотвествует ожидаемому результату.");
@@ -103,4 +103,44 @@ class InMemoryTaskManagerTest {
         Assertions.assertEquals(subtask.getDescription(), description, "Описание при создании отличаются");
     }
 
+    @Test
+    public void shouldReturnPositiveWhenTaskUpdated() {
+
+        Task expectedTask = new Task("Открыть бизнес", "Открыть бизнес с доходом в 100500к");
+        expectedTask.setIdTask(1);
+
+        Task actualTask = taskManager.getTask(1);
+
+        taskManager.updateTask(expectedTask);
+
+        Assertions.assertNotEquals(expectedTask, actualTask, "Не обновили таск");
+
+    }
+
+    @Test
+    public void shouldReturnPositiveWhenEpicUpdated() {
+
+        Epic expectedEpic = new Epic("Захватить мир", "Захватить мир игрушек");
+        expectedEpic.setIdTask(3);
+
+        Epic actualTask = taskManager.getEpic(3);
+
+        taskManager.updateTask(expectedEpic);
+
+        Assertions.assertNotEquals(expectedEpic, actualTask, "Не обновили таск");
+    }
+
+    @Test
+    public void shouldReturnPositiveWhenSubtaskUpdated() {
+
+        Subtask expectedSubtask = new Subtask("Научиться плавать", "Сходить в бассейн.", 3);
+        expectedSubtask.setIdTask(5);
+
+        Subtask actualSubtask = taskManager.getSubtask(5);
+
+        taskManager.updateTask(expectedSubtask);
+
+        Assertions.assertNotEquals(expectedSubtask, actualSubtask, "Не обновили таск");
+
+    }
 }

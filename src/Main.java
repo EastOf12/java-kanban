@@ -37,7 +37,7 @@ public class Main {
         System.out.println("Все подзадачи " + taskManager.getAllSubtask());
 
         System.out.println("Отображаем историю просмотра тасков.");
-        taskManager.getTask(1);
+        taskManager.getTask(9);
         taskManager.getTask(2);
         taskManager.getEpic(4);
         taskManager.getSubtask(6);

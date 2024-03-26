@@ -45,8 +45,9 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public Task getTask(int idTask) {
-        historyManager.addHistory(allTask.get(idTask));
-        return allTask.get(idTask);
+        Task task = allTask.get(idTask);
+        historyManager.addHistory(task);
+        return task;
     } // Получить таск по id.
 
     @Override
@@ -88,8 +89,9 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public Epic getEpic(int idTask) {
-        historyManager.addHistory(allEpic.get(idTask));
-        return allEpic.get(idTask);
+        Epic epic = allEpic.get(idTask);
+        historyManager.addHistory(epic);
+        return epic;
     } // Получить эпик по id
 
     private Epic getEpicRemove(int idTask) {
@@ -179,8 +181,9 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public Subtask getSubtask(int idTask) {
-        historyManager.addHistory(allSubtask.get(idTask));
-        return allSubtask.get(idTask);
+        Subtask subtask = allSubtask.get(idTask);
+        historyManager.addHistory(subtask);
+        return subtask;
     } // Получить подзадачу по id.
 
     @Override
