@@ -143,4 +143,31 @@ class InMemoryTaskManagerTest {
         Assertions.assertNotEquals(expectedSubtask, actualSubtask, "Не обновили таск");
 
     }
+
+    @Test
+    public void shouldReturnPositiveWhenTaskRemoved() {
+        Assertions.assertNotNull(taskManager.getTask(1));
+
+        taskManager.removalTask(1);
+
+        assertNull(taskManager.getTask(1), "Таск не удалили");
+    }
+
+    @Test
+    public void shouldReturnPositiveWhenEpicRemoved() {
+        Assertions.assertNotNull(taskManager.getEpic(3));
+
+        taskManager.removalEpic(3);
+
+        assertNull(taskManager.getEpic(3), "Эпик не удалили");
+    }
+
+    @Test
+    public void shouldReturnPositiveWhenSubtaskRemoved() {
+        Assertions.assertNotNull(taskManager.getSubtask(5));
+
+        taskManager.removalSubtask(5);
+
+        assertNull(taskManager.getSubtask(5), "Подзадачу не удалили");
+    }
 }

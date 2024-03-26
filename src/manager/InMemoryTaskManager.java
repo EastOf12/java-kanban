@@ -232,6 +232,7 @@ public class InMemoryTaskManager implements TaskManager {
         return taskId;
     } //Метод определения id для нового таска.
 
+    @Override
     public ArrayList<Task> getHistory() {
         return historyManager.getHistory();
     }
