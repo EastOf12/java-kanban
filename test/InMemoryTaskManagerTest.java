@@ -59,6 +59,7 @@ class InMemoryTaskManagerTest {
     public void shouldReturnPositiveWhenSaveHistory() {
         Assertions.assertTrue(taskManager.getHistory().isEmpty(), "Список не пуст.");
 
+
         taskManager.getTask(1);
         Epic epic = taskManager.getEpic(3);
         taskManager.getSubtask(5);
@@ -68,6 +69,8 @@ class InMemoryTaskManagerTest {
 
         Assertions.assertEquals(taskManager.getHistory().get(1), epic
                 , "После добавления новой задачи, данные в предыдущей изменились.");
+
+
     }
 
     @Test
@@ -170,4 +173,34 @@ class InMemoryTaskManagerTest {
 
         assertNull(taskManager.getSubtask(5), "Подзадачу не удалили");
     }
+
+    @Test
+    public void shouldReturnPositiveWhenTaskRemovedHistory() {
+        taskManager.getTask(1);
+        Assertions.assertNotNull(taskManager.getHistory());
+
+        taskManager.removeHistoryTask(1);
+        Assertions.assertTrue(taskManager.getHistory().isEmpty());
+    }
+
+    @Test
+    public void shouldReturnPositiveWhenSubtaskRemovedHistory() {
+        taskManager.getSubtask(5);
+        Assertions.assertNotNull(taskManager.getHistory());
+
+        taskManager.removeHistoryTask(5);
+        Assertions.assertTrue(taskManager.getHistory().isEmpty());
+    }
+
+    @Test
+    public void shouldReturnPositiveWhenEpicRemovedHistory() {
+        taskManager.getEpic(3);
+        taskManager.getSubtask(5);
+        taskManager.getSubtask(6);
+        Assertions.assertNotNull(taskManager.getHistory());
+
+        taskManager.removeHistoryTask(3);
+        Assertions.assertTrue(taskManager.getHistory().isEmpty());
+    }
+
 }

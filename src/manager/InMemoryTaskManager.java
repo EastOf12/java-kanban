@@ -22,6 +22,8 @@ public class InMemoryTaskManager implements TaskManager {
         allSubtask = new HashMap<>();
         allTask = new HashMap<>();
         taskId = 0;
+
+
         historyManager = Managers.getDefaultHistory();
     }
 
@@ -234,6 +236,30 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public ArrayList<Task> getHistory() {
-        return historyManager.getHistory();
+        InMemoryHistoryManager.LinkedListHistory<? extends Task> historyList = historyManager.getHistory();
+        ArrayList<Task> history = new ArrayList<>();
+        int size = historyList.size();
+
+        if (size > 0) {
+            InMemoryHistoryManager.LinkedListHistory.Node prev = historyList.getLast();
+            for (int i = 0; i < size; i++) {
+                history.add((Task) prev.getData());
+                prev = prev.getNext();
+
+            }
+        }
+
+        return history;
+    } //Переводит LinkedListHistory в ArrayList и возвращает его.
+
+    public HashMap<Integer, InMemoryHistoryManager.LinkedListHistory.Node> getHashMapHistory() {
+        HashMap<Integer, InMemoryHistoryManager.LinkedListHistory.Node> hashMapHistory = historyManager.getHashMapHistory();
+        return hashMapHistory;
     }
+
+    @Override
+    public void removeHistoryTask(int taskId) {
+        historyManager.remove(taskId);
+    }
+
 }

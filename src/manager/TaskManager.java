@@ -5,6 +5,7 @@ import tasks.Subtask;
 import tasks.Task;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public interface TaskManager {
     //Методы tasks.Task
@@ -64,5 +65,9 @@ public interface TaskManager {
 
     ArrayList<Subtask> getSubtaskEpic(int idEpic); //Получаем все задачи в эпике.
 
-    public ArrayList<Task> getHistory();
+    public ArrayList<Task> getHistory(); //Возвращает исторю задач в виде списка
+
+    HashMap<Integer, InMemoryHistoryManager.LinkedListHistory.Node> getHashMapHistory(); //Возвращает исторю задач в таблицы
+
+    public void removeHistoryTask(int taskId); //Удаляет таск из истории просмотров.
 }
