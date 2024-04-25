@@ -6,7 +6,7 @@ import tasks.Task;
 import java.util.HashMap;
 import java.util.NoSuchElementException;
 
-public class InMemoryHistoryManager implements HistoryManager{
+public class InMemoryHistoryManager implements HistoryManager {
 
     private final LinkedListHistory<Task> linkedListHistoryTask;
     private final HashMap<Integer, LinkedListHistory.Node> hashMapHistory;
@@ -18,7 +18,7 @@ public class InMemoryHistoryManager implements HistoryManager{
 
     @Override
     public void addHistory(Task task) {
-        if(task == null) {
+        if (task == null) {
             return;
         }
 
@@ -26,10 +26,10 @@ public class InMemoryHistoryManager implements HistoryManager{
         final int taskId = task.getIdTask();
 
         //Проверяем, смотрели ли его ранее.
-        if(hashMapHistory.containsKey(taskId)) {
+        if (hashMapHistory.containsKey(taskId)) {
             LinkedListHistory.Node node = hashMapHistory.get(taskId);
             linkedListHistoryTask.removeNode(node);
-            linkedListHistoryTask.size --;
+            linkedListHistoryTask.size--;
         }
 
         linkedListHistoryTask.addLastTask(task);
@@ -43,13 +43,12 @@ public class InMemoryHistoryManager implements HistoryManager{
     }
 
 
-
     @Override
     public void remove(int id) {
-        if(hashMapHistory.containsKey(id)) {
+        if (hashMapHistory.containsKey(id)) {
             LinkedListHistory.Node node = hashMapHistory.get(id);
 
-            if (node.getData()  instanceof Epic) {
+            if (node.getData() instanceof Epic) {
                 Epic epic = (Epic) node.getData();
                 for (int subtaskID : epic.getSubtasks()) {
                     remove(subtaskID);
@@ -57,7 +56,7 @@ public class InMemoryHistoryManager implements HistoryManager{
             }
             linkedListHistoryTask.removeNode(node);
             hashMapHistory.remove(id, node);
-            linkedListHistoryTask.size --;
+            linkedListHistoryTask.size--;
 
 
         }
@@ -71,7 +70,7 @@ public class InMemoryHistoryManager implements HistoryManager{
         public LinkedListHistory() {
         }
 
-        class Node <E> {
+        class Node<E> {
 
             public E data;
             public Node<E> next;

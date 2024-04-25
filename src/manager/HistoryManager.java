@@ -6,6 +6,7 @@ import java.util.HashMap;
 
 public interface HistoryManager {
     void addHistory(Task task);
+
     void remove(int id);
 
     InMemoryHistoryManager.LinkedListHistory<Task> getHistory(); //Возвращает исторю задач в виде связанного списка

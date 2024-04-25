@@ -24,7 +24,7 @@ public class Main {
         taskManager.createEpic(epic1);
         taskManager.createEpic(epic2);
 
-                //Подзадачи
+        //Подзадачи
         Subtask subtask1 = new Subtask("Убрать войны", "Убрать все оружие в мире", 3);
         Subtask subtask2 = new Subtask("Дать всем еды", "Накормить всех", 3);
         Subtask subtask3 = new Subtask("Раздать конфеты", "Сделать мир слаще", 3);
