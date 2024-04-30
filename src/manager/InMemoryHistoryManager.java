@@ -4,9 +4,7 @@ import tasks.Epic;
 import tasks.Task;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class InMemoryHistoryManager implements HistoryManager {
     LinkedListHistory<Task> linkedListHistory;
@@ -101,23 +99,5 @@ public class InMemoryHistoryManager implements HistoryManager {
         }
     }
 } //Удаляет задачу по ее id из linkedListHistoryTask
-
-class LinkedListHistory<T> {
-    Node<T> head;
-    Node<T> tail;
-    Map<Integer, Node> map = new HashMap<>();
-}
-
-class Node<E> {
-    public E data;
-    public Node<E> next;
-    public Node<E> prev;
-
-    Node(Node<E> prev, E data, Node<E> next) {
-        this.data = data;
-        this.next = next;
-        this.prev = prev;
-    }
-}
 
 

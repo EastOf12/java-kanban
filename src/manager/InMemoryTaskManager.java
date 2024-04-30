@@ -9,13 +9,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class InMemoryTaskManager implements TaskManager {
-    private int taskId;
-
     //1.Хранить все 3 типа задач. Формируем 3 списка с задачами.
     private final HashMap<Integer, Epic> allEpic;
     private final HashMap<Integer, Subtask> allSubtask;
     private final HashMap<Integer, Task> allTask;
     private final HistoryManager historyManager;
+    private int taskId;
 
     public InMemoryTaskManager() {
         allEpic = new HashMap<>();
