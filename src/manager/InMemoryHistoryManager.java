@@ -3,149 +3,121 @@ package manager;
 import tasks.Epic;
 import tasks.Task;
 
+import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.NoSuchElementException;
+import java.util.List;
+import java.util.Map;
 
 public class InMemoryHistoryManager implements HistoryManager {
-
-    private final LinkedListHistory<Task> linkedListHistoryTask;
-    private final HashMap<Integer, LinkedListHistory.Node> hashMapHistory;
+    LinkedListHistory<Task> linkedListHistory;
 
     public InMemoryHistoryManager() {
-        linkedListHistoryTask = new LinkedListHistory<>();
-        hashMapHistory = new HashMap<>();
+        linkedListHistory = new LinkedListHistory<>();
     }
 
     @Override
-    public void addHistory(Task task) {
+    public void add(Task task) {
         if (task == null) {
             return;
         }
-
-        //Получаем id таска.
+        Node<Task> newNode;
         final int taskId = task.getIdTask();
 
-        //Проверяем, смотрели ли его ранее.
-        if (hashMapHistory.containsKey(taskId)) {
-            LinkedListHistory.Node node = hashMapHistory.get(taskId);
-            linkedListHistoryTask.removeNode(node);
-            linkedListHistoryTask.size--;
+        if (linkedListHistory.map.containsKey(taskId)) {
+            remove(taskId);
         }
 
-        linkedListHistoryTask.addLastTask(task);
-        hashMapHistory.put(task.getIdTask(), linkedListHistoryTask.getLast());
+        //Добавляем таск в связанный список.
+        if (linkedListHistory.tail == null) {
+            newNode = new Node<>(null, task, null);
+            linkedListHistory.tail = newNode;
+            linkedListHistory.head = newNode;
+
+        } else {
+            newNode = new Node<>(linkedListHistory.head, task, null);
+            linkedListHistory.head.next = newNode;
+            linkedListHistory.head = newNode;
+        }
+
+        //Добавляем таск в таблицу.
+        linkedListHistory.map.put(taskId, linkedListHistory.head);
 
     } // Добаввляем полученную задачу в историю.
 
     @Override
-    public LinkedListHistory<Task> getHistory() {
-        return linkedListHistoryTask;
+    public List<Task> getHistory() {
+        List<Task> history = new ArrayList<>();
+
+        if (linkedListHistory.tail == null) {
+            return history;
+        }
+
+        Node<Task> node = linkedListHistory.tail;
+
+        while (true) {
+            if (node == null) {
+                break;
+            } else {
+                history.add(node.data);
+                node = node.next;
+            }
+        }
+
+        return history;
     }
 
 
     @Override
     public void remove(int id) {
-        if (hashMapHistory.containsKey(id)) {
-            LinkedListHistory.Node node = hashMapHistory.get(id);
 
-            if (node.getData() instanceof Epic) {
-                Epic epic = (Epic) node.getData();
-                for (int subtaskID : epic.getSubtasks()) {
-                    remove(subtaskID);
+        if (linkedListHistory.map.get(id).data instanceof Epic) {
+            ArrayList<Integer> subtasks = ((Epic) linkedListHistory.map.get(id).data).getSubtasks();
+            for (Integer subtask : subtasks) {
+                remove(subtask);
+            }
+        }
+        if (linkedListHistory.map.containsKey(id)) {
+            Node nodeToRemove = linkedListHistory.map.get(id);
+            if (nodeToRemove != null) {
+                Node nodePrev = nodeToRemove.prev;
+                Node nodeNext = nodeToRemove.next;
+
+                if (nodePrev == null) {
+                    linkedListHistory.tail = nodeNext;
+                    if (nodeNext != null) {
+                        nodeNext.prev = null;
+                    }
+                } else {
+                    nodePrev.next = nodeNext;
+                    if (nodeNext != null) {
+                        nodeNext.prev = nodePrev;
+                    } else {
+                        linkedListHistory.head = nodePrev;
+                    }
                 }
-            }
-            linkedListHistoryTask.removeNode(node);
-            hashMapHistory.remove(id, node);
-            linkedListHistoryTask.size--;
 
-
-        }
-    } //Удаляет задачу по ее id из linkedListHistoryTask и hashMapHistory
-
-    public class LinkedListHistory<T> {
-        private Node<T> head;
-        private Node<T> tail;
-        private int size = 0;
-
-        public LinkedListHistory() {
-        }
-
-        class Node<E> {
-
-            public E data;
-            public Node<E> next;
-            public Node<E> prev;
-
-            public Node<E> getNext() {
-                return next;
-            }
-
-            public E getData() {
-                return data;
-            }
-
-            public Node<E> getPrev() {
-                return prev;
-            }
-
-            public Node(Node<E> prev, E data, Node<E> next) {
-                this.data = data;
-                this.next = next;
-                this.prev = prev;
-            }
-
-            public void setData(E data) {
-                this.data = data;
-            }
-
-            public void setNext(Node next) {
-                this.next = next;
+                linkedListHistory.map.remove(id);
             }
         }
-
-
-        public void addLastTask(T element) {
-            final Node<T> oldTail = tail;
-            final Node<T> newNode = new Node<>(null, element, oldTail);
-            tail = newNode;
-            if (oldTail == null)
-                head = newNode;
-            else
-                oldTail.prev = newNode;
-            size++;
-        }
-
-        public Node getLast() {
-            final Node<T> curTail = tail;
-            if (curTail == null)
-                throw new NoSuchElementException();
-            return tail;
-        }
-
-        public int size() {
-            return this.size;
-        }
-
-        public Node getFirst() {
-            final Node<T> curHead = head;
-            if (curHead == null)
-                throw new NoSuchElementException();
-            return head;
-        }
-
-        public void removeNode(Node node) {
-            if (node == null || node.getNext() == null) {
-                return;
-            }
-
-            Node nextNode = node.getNext();
-            node.setData(nextNode.getData());
-            node.setNext(nextNode.getNext());
-        } //Удаляем узел из списка.
     }
+} //Удаляет задачу по ее id из linkedListHistoryTask
 
-    public HashMap<Integer, LinkedListHistory.Node> getHashMapHistory() {
-        return hashMapHistory;
+class LinkedListHistory<T> {
+    Node<T> head;
+    Node<T> tail;
+    Map<Integer, Node> map = new HashMap<>();
+}
+
+class Node<E> {
+    public E data;
+    public Node<E> next;
+    public Node<E> prev;
+
+    Node(Node<E> prev, E data, Node<E> next) {
+        this.data = data;
+        this.next = next;
+        this.prev = prev;
     }
 }
+
 

@@ -48,7 +48,7 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public Task getTask(int idTask) {
         Task task = allTask.get(idTask);
-        historyManager.addHistory(task);
+        historyManager.add(task);
         return task;
     } // Получить таск по id.
 
@@ -92,7 +92,7 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public Epic getEpic(int idTask) {
         Epic epic = allEpic.get(idTask);
-        historyManager.addHistory(epic);
+        historyManager.add(epic);
         return epic;
     } // Получить эпик по id
 
@@ -184,7 +184,7 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public Subtask getSubtask(int idTask) {
         Subtask subtask = allSubtask.get(idTask);
-        historyManager.addHistory(subtask);
+        historyManager.add(subtask);
         return subtask;
     } // Получить подзадачу по id.
 
@@ -236,30 +236,8 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public ArrayList<Task> getHistory() {
-        InMemoryHistoryManager.LinkedListHistory<? extends Task> historyList = historyManager.getHistory();
-        ArrayList<Task> history = new ArrayList<>();
-        int size = historyList.size();
+        return (ArrayList<Task>) historyManager.getHistory();
+    } //Возвращает исторю просмотров.
 
-        if (size > 0) {
-            InMemoryHistoryManager.LinkedListHistory.Node prev = historyList.getLast();
-            for (int i = 0; i < size; i++) {
-                history.add((Task) prev.getData());
-                prev = prev.getNext();
-
-            }
-        }
-
-        return history;
-    } //Переводит LinkedListHistory в ArrayList и возвращает его.
-
-    public HashMap<Integer, InMemoryHistoryManager.LinkedListHistory.Node> getHashMapHistory() {
-        HashMap<Integer, InMemoryHistoryManager.LinkedListHistory.Node> hashMapHistory = historyManager.getHashMapHistory();
-        return hashMapHistory;
-    }
-
-    @Override
-    public void removeHistoryTask(int taskId) {
-        historyManager.remove(taskId);
-    }
 
 }
