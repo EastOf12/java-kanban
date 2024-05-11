@@ -21,8 +21,6 @@ public class InMemoryTaskManager implements TaskManager {
         allSubtask = new HashMap<>();
         allTask = new HashMap<>();
         taskId = 0;
-
-
         historyManager = Managers.getDefaultHistory();
     }
 
@@ -55,6 +53,7 @@ public class InMemoryTaskManager implements TaskManager {
     public boolean removalTask(int idTask) {
         if (allTask.containsKey(idTask)) {
             allTask.remove(idTask);
+            historyManager.remove(idTask);
             return true;
         }
         return false;
@@ -104,7 +103,9 @@ public class InMemoryTaskManager implements TaskManager {
         if (allEpic.containsKey(idTask)) {
             for (Integer idSubtask : getEpicRemove(idTask).getSubtasks()) {
                 allSubtask.remove(idSubtask);
+                historyManager.remove(idSubtask);
             }
+            historyManager.remove(idTask);
             allEpic.remove(idTask);
             return true;
         }
@@ -196,6 +197,7 @@ public class InMemoryTaskManager implements TaskManager {
             allSubtask.remove(idTask);
             epic.removeIdSubtasks(idTask);
             updateStatusEpic(epic);
+            historyManager.remove(idTask);
             return true;
         }
         return false;

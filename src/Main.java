@@ -17,8 +17,8 @@ public class Main {
         Task task2 = new Task("Сходить в магазин", "Купить еду в магазине");
         taskManager.createTask(task1);
         taskManager.createTask(task2);
-//
-//        //Эпики
+
+        //Эпики
         Epic epic1 = new Epic("Построить мир", "Организовать мир во всем мире.");
         Epic epic2 = new Epic("Полететь на марс", "Прилететь на марс и организовать там колонию.");
         taskManager.createEpic(epic1);
@@ -32,9 +32,7 @@ public class Main {
         taskManager.createSubtask(subtask2);
         taskManager.createSubtask(subtask3);
 
-        taskManager.getTask(1);
-        taskManager.getTask(2);
-        taskManager.getEpic(3);
+
         taskManager.getEpic(4);
         taskManager.getSubtask(5);
         taskManager.getSubtask(6);
@@ -43,9 +41,7 @@ public class Main {
         taskManager.getTask(2);
         taskManager.getEpic(3);
 
-
+        taskManager.removalEpic(3);
         System.out.println("Все задачи в истории. " + taskManager.getHistory());
-
-//        System.out.println("\nВсе задачи в истории после удаления эпика " + taskManager.getHistory());
     }
 }
