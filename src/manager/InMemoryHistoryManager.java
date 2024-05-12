@@ -28,9 +28,7 @@ public class InMemoryHistoryManager implements HistoryManager {
 
     @Override
     public void remove(int id) {
-        if (linkedListHistory.map.containsKey(id)) {
-            linkedListHistory.removeNode(id);
-        }
+        linkedListHistory.removeNode(id);
     }
 
     private static class Node {
@@ -63,26 +61,27 @@ public class InMemoryHistoryManager implements HistoryManager {
 
             final int taskId = data.getIdTask();
 
-            if (map.containsKey(taskId)) {
-                removeNode(taskId);
-                System.out.println(taskId + " должен быть удален");
-            }
+            removeNode(taskId);
 
             if (isEmpty()) {
+                head = newData;
                 tail = newData;
             } else {
-                head.prev = newData;
+                newData.prev = tail;
+                tail.next = newData;
+                tail = newData;
             }
-
-            newData.next = head;
-            head = newData;
 
             // Добавляем таск в таблицу.
             map.put(taskId, newData);
         } //Добавить узел в начало списка.
 
         private void removeNode(int id) {
-            Node nodeToRemove = map.get(id);
+            Node nodeToRemove = map.remove(id);
+            if (nodeToRemove == null) {
+                return;
+            }
+
             Node prevNode = nodeToRemove.prev;
             Node nextNode = nodeToRemove.next;
 
@@ -103,22 +102,16 @@ public class InMemoryHistoryManager implements HistoryManager {
                 }
                 tail = prevNode;
             }
-
-            map.remove(id);
         }
 
         private List<Task> getNodes() {
             List<Task> history = new ArrayList<>();
 
-            if (tail == null) {
-                return history;
-            }
-
-            Node node = head;
+            Node node = tail;
 
             while (node != null) {
                 history.add(node.data);
-                node = node.next;
+                node = node.prev;
             }
 
             return history;
