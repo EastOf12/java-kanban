@@ -9,7 +9,6 @@ import java.util.ArrayList;
 
 public class FileBackedTaskManager extends InMemoryTaskManager implements TaskManager {
     private File file = new File("src/save.csv");
-    ;
 
     public FileBackedTaskManager() {
         super();
