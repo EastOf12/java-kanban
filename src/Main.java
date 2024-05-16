@@ -4,11 +4,9 @@ import tasks.Epic;
 import tasks.Subtask;
 import tasks.Task;
 
-import java.io.IOException;
-
 public class Main {
 
-    public static void main(String[] args){
+    public static void main(String[] args) {
         System.out.println("Поехали!");
 
         //Создаем объект менеджера.
