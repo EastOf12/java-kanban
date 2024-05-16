@@ -7,7 +7,7 @@ import tasks.Epic;
 import tasks.Subtask;
 import tasks.Task;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 class InMemoryTaskManagerTest {
     private static TaskManager taskManager;
@@ -59,6 +59,7 @@ class InMemoryTaskManagerTest {
     public void shouldReturnPositiveWhenSaveHistory() {
         Assertions.assertTrue(taskManager.getHistory().isEmpty(), "Список не пуст.");
 
+
         taskManager.getTask(1);
         Epic epic = taskManager.getEpic(3);
         taskManager.getSubtask(5);
@@ -68,6 +69,8 @@ class InMemoryTaskManagerTest {
 
         Assertions.assertEquals(taskManager.getHistory().get(1), epic
                 , "После добавления новой задачи, данные в предыдущей изменились.");
+
+
     }
 
     @Test

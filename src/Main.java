@@ -1,5 +1,3 @@
-import manager.HistoryManager;
-import manager.InMemoryHistoryManager;
 import manager.Managers;
 import manager.TaskManager;
 import tasks.Epic;
@@ -29,19 +27,22 @@ public class Main {
         //Подзадачи
         Subtask subtask1 = new Subtask("Убрать войны", "Убрать все оружие в мире", 3);
         Subtask subtask2 = new Subtask("Дать всем еды", "Накормить всех", 3);
+        Subtask subtask3 = new Subtask("Раздать конфеты", "Сделать мир слаще", 3);
         taskManager.createSubtask(subtask1);
         taskManager.createSubtask(subtask2);
+        taskManager.createSubtask(subtask3);
 
-        System.out.println("\nВсе таски " + taskManager.getAllTask());
-        System.out.println("Все эпики " + taskManager.getAllEpic());
-        System.out.println("Все подзадачи " + taskManager.getAllSubtask());
 
-        System.out.println("Отображаем историю просмотра тасков.");
-        taskManager.getTask(9);
-        taskManager.getTask(2);
         taskManager.getEpic(4);
+        taskManager.getSubtask(5);
         taskManager.getSubtask(6);
-        System.out.println(taskManager.getHistory());
+        taskManager.getSubtask(7);
+        taskManager.getTask(1);
+        taskManager.getTask(2);
+        taskManager.getEpic(3);
+
+        taskManager.removalEpic(3);
+        System.out.println("Все задачи в истории. " + taskManager.getHistory());
 
     }
 }
