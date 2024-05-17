@@ -32,7 +32,6 @@ public class Main {
         taskManager.createSubtask(subtask2);
         taskManager.createSubtask(subtask3);
 
-
         taskManager.getEpic(4);
         taskManager.getSubtask(5);
         taskManager.getSubtask(6);
@@ -43,6 +42,5 @@ public class Main {
 
         taskManager.removalEpic(3);
         System.out.println("Все задачи в истории. " + taskManager.getHistory());
-
     }
 }
