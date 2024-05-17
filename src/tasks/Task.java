@@ -16,28 +16,28 @@ public class Task {
         return title;
     }
 
-    public String getDescription() {
-        return description;
-    }
-
-    public int getIdTask() {
-        return idTask;
-    }
-
-    public TaskStatus getStatus() {
-        return status;
-    }
-
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public String getDescription() {
+        return description;
     }
 
     public void setDescription(String description) {
         this.description = description;
     }
 
+    public int getIdTask() {
+        return idTask;
+    }
+
     public void setIdTask(int idTask) {
         this.idTask = idTask;
+    }
+
+    public TaskStatus getStatus() {
+        return status;
     }
 
     public void setStatus(TaskStatus status) {
