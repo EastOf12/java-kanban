@@ -64,5 +64,5 @@ public interface TaskManager {
 
     ArrayList<Subtask> getSubtaskEpic(int idEpic); //Получаем все задачи в эпике.
 
-    ArrayList<Task> getHistory(); //Возвращает исторю задач в виде списка
+    public ArrayList<Task> getHistory();
 }
