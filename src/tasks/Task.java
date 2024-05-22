@@ -1,6 +1,7 @@
 package tasks;
 
 public class Task {
+    protected TaskType taskType;
     private String title;
     private String description;
     private int idTask;
@@ -10,6 +11,7 @@ public class Task {
         this.title = title;
         this.description = description;
         status = TaskStatus.NEW;
+        taskType = TaskType.TASK;
     }
 
     public String getTitle() {
@@ -18,6 +20,10 @@ public class Task {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public TaskType getTaskType() {
+        return taskType;
     }
 
     public String getDescription() {
