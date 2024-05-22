@@ -8,15 +8,15 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 
 public class FileBackedTaskManager extends InMemoryTaskManager {
-    private static File file;
+    private final File file;
 
     public FileBackedTaskManager(File file) {
         super();
-        FileBackedTaskManager.file = file;
+        this.file = file;
     }
 
 
-    public static FileBackedTaskManager loadFromFile() {
+    public static FileBackedTaskManager loadFromFile(File file) {
         try {
             FileBackedTaskManager fileBackedTaskManager = new FileBackedTaskManager(file);
 
@@ -29,9 +29,8 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                 countLine++;
 
                 if (countLine > 1) {
-                    Task task = taskString.taskFromString(line);
+                    Task task = TaskStringManager.taskFromString(line);
 
-                    assert task != null;
                     if (task.getTaskType().equals(TaskType.EPIC)) {
                         fileBackedTaskManager.allEpic.put(task.getIdTask(), (Epic) task);
                     } else if (task.getTaskType().equals(TaskType.SUBTASK)) {
@@ -39,7 +38,6 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                         fileBackedTaskManager.allSubtask.put(task.getIdTask(), subtask);
                         Epic epic = fileBackedTaskManager.allEpic.get(subtask.getIdEpic());
                         epic.setSubtasks(subtask.getIdTask());
-                        fileBackedTaskManager.updateStatusEpic(epic);
                     } else {
                         fileBackedTaskManager.allTask.put(task.getIdTask(), task);
                     }
@@ -145,17 +143,17 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
 
             //Сохрнаяем в файл все задачи типа Task.
             for (Task task : getAllTask()) {
-                allTaskSave.add(taskString.taskToString(task, TaskType.TASK));
+                allTaskSave.add(TaskStringManager.taskToString(task, TaskType.TASK));
             }
 
             //Сохрнаяем в файл все задачи типа Epic
             for (Epic epic : getAllEpic()) {
-                allTaskSave.add(taskString.taskToString(epic, TaskType.EPIC));
+                allTaskSave.add(TaskStringManager.taskToString(epic, TaskType.EPIC));
             }
 
             //Сохрнаяем в файл все задачи типа Subtask
             for (Subtask subtask : getAllSubtask()) {
-                allTaskSave.add(taskString.taskToString(subtask, TaskType.SUBTASK));
+                allTaskSave.add(TaskStringManager.taskToString(subtask, TaskType.SUBTASK));
             }
 
             //Записываем в файл.
@@ -174,56 +172,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         }
     }
 
-    public static class taskString {
-        public static String taskToString(Task task, TaskType taskType) {
-
-            String taskString;
-            if (taskType.equals(TaskType.SUBTASK)) {
-                Subtask subtask = (Subtask) task;
-                taskString = String.format("%d,%s,%s,%s,%s,%d", subtask.getIdTask(), taskType, subtask.getTitle(),
-                        subtask.getStatus(), subtask.getDescription(), subtask.getIdEpic());
-            } else {
-                taskString = String.format("%d,%s,%s,%s,%s", task.getIdTask(), taskType, task.getTitle(),
-                        task.getStatus(), task.getDescription());
-            }
-
-            return taskString;
-        }
-
-        private static Task taskFromString(String taskString) throws IOException {
-            String[] values = taskString.split(",");
-
-            int id = Integer.parseInt(values[0]);
-            TaskType taskType = TaskType.valueOf(values[1]);
-            ;
-            String title = values[2];
-            TaskStatus status = TaskStatus.valueOf(values[3]);
-            String description = values[4];
-
-            switch (taskType) {
-                case TASK:
-                    Task task = new Task(title, description);
-                    task.setIdTask(id);
-                    task.setStatus(status);
-                    return task;
-                case EPIC:
-                    Epic epic = new Epic(title, description);
-                    epic.setIdTask(id);
-                    epic.setStatus(status);
-                    return epic;
-                case SUBTASK:
-                    int idEpic = Integer.parseInt(values[5]);
-                    Subtask subtask = new Subtask(title, description, idEpic);
-                    subtask.setIdTask(id);
-                    subtask.setStatus(status);
-                    return subtask;
-            }
-            return null;
-        }
-    }
-
     private static class ManagerSaveException extends RuntimeException {
-
         private ManagerSaveException(final String message) {
             super(message);
         }

@@ -24,7 +24,7 @@ public class FileBackedTaskManagerTest {
 
     @Test
     public void shouldReturnPositiveWhenLoadEmptyFile() throws IOException {
-        FileBackedTaskManager fileBackedTaskManager = FileBackedTaskManager.loadFromFile();
+        FileBackedTaskManager fileBackedTaskManager = FileBackedTaskManager.loadFromFile(tempFile);
         assertEquals(0, fileBackedTaskManager.getAllTask().size(), "Не должно быть задач");
         assertEquals(0, fileBackedTaskManager.getAllEpic().size(), "Не должно быть задач");
         assertEquals(0, fileBackedTaskManager.getAllSubtask().size(), "Не должно быть задач");
@@ -46,7 +46,7 @@ public class FileBackedTaskManagerTest {
         fileBackedTaskManager.createEpic(epic);
         fileBackedTaskManager.createSubtask(subtask);
 
-        FileBackedTaskManager newFileBackedTaskManager = FileBackedTaskManager.loadFromFile();
+        FileBackedTaskManager newFileBackedTaskManager = FileBackedTaskManager.loadFromFile(tempFile);
 
         assertEquals(fileBackedTaskManager.getAllTask(), newFileBackedTaskManager.getAllTask(), "Таски " +
                 "должны быть одинаковыми.");
