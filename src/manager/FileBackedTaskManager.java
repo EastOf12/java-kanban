@@ -29,7 +29,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                 countLine++;
 
                 if (countLine > 1) {
-                    Task task = taskString.taskFromString(line);
+                    Task task = TaskString.taskFromString(line);
 
                     assert task != null;
                     if (task.getTaskType().equals(TaskType.EPIC)) {
@@ -145,17 +145,17 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
 
             //Сохрнаяем в файл все задачи типа Task.
             for (Task task : getAllTask()) {
-                allTaskSave.add(taskString.taskToString(task, TaskType.TASK));
+                allTaskSave.add(TaskString.taskToString(task, TaskType.TASK));
             }
 
             //Сохрнаяем в файл все задачи типа Epic
             for (Epic epic : getAllEpic()) {
-                allTaskSave.add(taskString.taskToString(epic, TaskType.EPIC));
+                allTaskSave.add(TaskString.taskToString(epic, TaskType.EPIC));
             }
 
             //Сохрнаяем в файл все задачи типа Subtask
             for (Subtask subtask : getAllSubtask()) {
-                allTaskSave.add(taskString.taskToString(subtask, TaskType.SUBTASK));
+                allTaskSave.add(TaskString.taskToString(subtask, TaskType.SUBTASK));
             }
 
             //Записываем в файл.
@@ -174,7 +174,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         }
     }
 
-    public static class taskString {
+    public static class TaskString {
         public static String taskToString(Task task, TaskType taskType) {
 
             String taskString;
