@@ -288,5 +288,5 @@ public class InMemoryTaskManager implements TaskManager {
                         newTask.getEndTime().isBefore(task.getStartTime())
                                 || newTask.getStartTime().isAfter(task.getEndTime())
                 );
-    }//Проверяет, пересекается ли срок выполнения новой задачи с теми, что уже есть. Если пересечений нет, то будет true
+    } //Проверяет, пересекается ли срок выполнения новой задачи с теми, что уже есть. Если пересечений нет, то будет true
 }
