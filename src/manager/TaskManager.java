@@ -5,6 +5,7 @@ import tasks.Subtask;
 import tasks.Task;
 
 import java.util.ArrayList;
+import java.util.TreeSet;
 
 public interface TaskManager {
     //Методы tasks.Task
@@ -65,4 +66,8 @@ public interface TaskManager {
     ArrayList<Subtask> getSubtaskEpic(int idEpic); //Получаем все задачи в эпике.
 
     ArrayList<Task> getHistory(); //Возвращает исторю задач в виде списка
+
+    boolean checkTaskIntersections(Task newTask);
+
+    public TreeSet<Task> getPrioritizedTasks();
 }

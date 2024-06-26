@@ -7,6 +7,8 @@ import tasks.Epic;
 import tasks.Subtask;
 import tasks.Task;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 class InMemoryHistoryManagerTest {
@@ -15,20 +17,39 @@ class InMemoryHistoryManagerTest {
     @BeforeEach
     public void beforeEach() {
         historyManager = new InMemoryHistoryManager();
-        Task task = new Task("Найти работу", "Найти работу с зарплатой 1000к");
+        Task task = new Task("Найти работу", "Найти работу с зарплатой 1000к"
+                , LocalDateTime.of(2024, 12, 31, 23, 59)
+                , Duration.ofDays(2));
         task.setIdTask(1);
 
         Epic epic = new Epic("Построить мир", "Организовать мир во всем мире.");
         epic.setIdTask(2);
 
 
-        Subtask subtask = new Subtask("Убрать войны", "Убрать все оружие в мире", 2);
+        Subtask subtask = new Subtask("Убрать войны", "Убрать все оружие в мире", 2
+                , LocalDateTime.of(2012, 12, 31, 23, 59)
+                , Duration.ofDays(2));
         subtask.setIdTask(3);
 
 
         historyManager.add(task);
         historyManager.add(epic);
         historyManager.add(subtask);
+    }
+
+    @Test
+    public void shouldReturnPositiveWhenStoryCantHasDuplicate() {
+
+        Assertions.assertEquals(historyManager.getHistory().size(), 3, "В истории должно быть 3 задачи.");
+
+        Task taskNew = new Task("Найти работу", "Найти работу с зарплатой 1000к"
+                , LocalDateTime.of(2024, 12, 31, 23, 59)
+                , Duration.ofDays(2));
+        taskNew.setIdTask(1);
+
+        historyManager.add(taskNew);
+        Assertions.assertEquals(historyManager.getHistory().size(), 3, "Таск не должен быть добавлен" +
+                ", тк он уже есть в истории");
     }
 
     @Test
@@ -81,9 +102,15 @@ class InMemoryHistoryManagerTest {
     public void shouldReturnPositiveWhenStoryEpicRemoveIsCorrect() {
         InMemoryTaskManager inMemoryTaskManager = new InMemoryTaskManager();
         Epic epic = new Epic("Построить мир", "Организовать мир во всем мире.");
-        Subtask subtask1 = new Subtask("Убрать войны", "Убрать все оружие в мире", 1);
-        Subtask subtask2 = new Subtask("Дать всем еды", "Накормить всех", 1);
-        Task task = new Task("Найти работу", "Найти работу с зарплатой 1000к");
+        Subtask subtask1 = new Subtask("Убрать войны", "Убрать все оружие в мире", 1
+                , LocalDateTime.of(2012, 12, 31, 23, 59)
+                , Duration.ofDays(2));
+        Subtask subtask2 = new Subtask("Дать всем еды", "Накормить всех", 1
+                , LocalDateTime.of(2013, 12, 31, 23, 59)
+                , Duration.ofDays(2));
+        Task task = new Task("Найти работу", "Найти работу с зарплатой 1000к"
+                , LocalDateTime.of(2024, 12, 31, 23, 59)
+                , Duration.ofDays(2));
 
         inMemoryTaskManager.createEpic(epic);
         inMemoryTaskManager.createSubtask(subtask1);

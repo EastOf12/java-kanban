@@ -7,23 +7,31 @@ import tasks.Task;
 
 import java.io.File;
 import java.io.IOException;
+import java.time.Duration;
+import java.time.LocalDateTime;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
-public class FileBackedTaskManagerTest {
+public class FileBackedTaskManagerTest extends TaskManagerTest<FileBackedTaskManager> {
     private static FileBackedTaskManager fileBackedTaskManager;
     File tempFile;
 
-    @BeforeEach
-    public void beforeEach() throws IOException {
+    @Override
+    protected FileBackedTaskManager createTaskManager() throws IOException {
         tempFile = File.createTempFile("myTempFile", ".txt");
         fileBackedTaskManager = new FileBackedTaskManager(tempFile);
+        return fileBackedTaskManager;
+    }
 
+    @BeforeEach
+    public void beforeEachFile() throws IOException {
+        createTaskManager();
     }
 
 
     @Test
-    public void shouldReturnPositiveWhenLoadEmptyFile() throws IOException {
+    public void shouldReturnPositiveWhenLoadEmptyFile() {
         FileBackedTaskManager fileBackedTaskManager = FileBackedTaskManager.loadFromFile(tempFile);
         assertEquals(0, fileBackedTaskManager.getAllTask().size(), "Не должно быть задач");
         assertEquals(0, fileBackedTaskManager.getAllEpic().size(), "Не должно быть задач");
@@ -39,9 +47,13 @@ public class FileBackedTaskManagerTest {
 
     @Test
     public void shouldReturnPositiveWhenSaveLoadFileIsCorrect() {
-        Task task = new Task("Найти работу", "Найти работу с зарплатой 1000к");
+        Task task = new Task("Найти работу", "Найти работу с зарплатой 1000к"
+                , LocalDateTime.of(2024, 12, 31, 23, 59)
+                , Duration.ofDays(2));
         Epic epic = new Epic("Построить мир", "Организовать мир во всем мире.");
-        Subtask subtask = new Subtask("Убрать войны", "Убрать все оружие в мире", 2);
+        Subtask subtask = new Subtask("Убрать войны", "Убрать все оружие в мире", 2
+                , LocalDateTime.of(2022, 12, 31, 23, 59)
+                , Duration.ofDays(2));
         fileBackedTaskManager.createTask(task);
         fileBackedTaskManager.createEpic(epic);
         fileBackedTaskManager.createSubtask(subtask);
@@ -55,4 +67,16 @@ public class FileBackedTaskManagerTest {
         assertEquals(fileBackedTaskManager.getAllSubtask(), newFileBackedTaskManager.getAllSubtask(),
                 "Подзадачи должны быть одинаковыми.");
     }
+
+    @Test
+    public void testSaveMethod() throws IOException {
+        File tempFile = new File("test");
+        FileBackedTaskManager fileBackedTaskManager = new FileBackedTaskManager(tempFile);
+
+        // Проверка для несуществующего пути
+        assertThrows(FileBackedTaskManager.ManagerSaveException.class, () -> {
+            fileBackedTaskManager.save(tempFile);
+        });
+    }
 }
+
