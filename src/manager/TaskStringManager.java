@@ -14,12 +14,12 @@ public class TaskStringManager {
         if (taskType.equals(TaskType.SUBTASK)) {
             Subtask subtask = (Subtask) task;
             taskString = String.format("%d,%s,%s,%s,%s,%tF %tT,%d,%d", subtask.getIdTask(), taskType, subtask.getTitle(),
-                    subtask.getStatus(), subtask.getDescription(), task.getStartTime()
-                    , task.getStartTime(), task.getDuration().toMinutes(), subtask.getIdEpic());
+                    subtask.getStatus(), subtask.getDescription(), task.getStartTime(),
+                    task.getStartTime(), task.getDuration().toMinutes(), subtask.getIdEpic());
         } else {
             taskString = String.format("%d,%s,%s,%s,%s,%tF %tT, %d", task.getIdTask(), taskType, task.getTitle(),
-                    task.getStatus(), task.getDescription(), task.getStartTime(), task.getStartTime()
-                    , task.getDuration().toMinutes());
+                    task.getStatus(), task.getDescription(), task.getStartTime(), task.getStartTime(),
+                    task.getDuration().toMinutes());
         }
 
         return taskString;
@@ -41,8 +41,8 @@ public class TaskStringManager {
 
         switch (taskType) {
             case TASK:
-                Task task = new Task(title, description
-                        , startTime, duration);
+                Task task = new Task(title, description,
+                        startTime, duration);
                 task.setIdTask(id);
                 task.setStatus(status);
                 return task;
@@ -55,8 +55,8 @@ public class TaskStringManager {
                 return epic;
             default:
                 int idEpic = Integer.parseInt(values[7]);
-                Subtask subtask = new Subtask(title, description, idEpic
-                        , startTime, duration);
+                Subtask subtask = new Subtask(title, description, idEpic,
+                        startTime, duration);
                 subtask.setIdTask(id);
                 subtask.setStatus(status);
                 return subtask;
