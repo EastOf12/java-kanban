@@ -20,6 +20,10 @@ public class Task {
         this.title = title;
     }
 
+    public TaskType getTaskType() {
+        return TaskType.TASK;
+    }
+
     public String getDescription() {
         return description;
     }

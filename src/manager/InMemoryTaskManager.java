@@ -10,9 +10,9 @@ import java.util.HashMap;
 
 public class InMemoryTaskManager implements TaskManager {
     //1.Хранить все 3 типа задач. Формируем 3 списка с задачами.
-    private final HashMap<Integer, Epic> allEpic;
-    private final HashMap<Integer, Subtask> allSubtask;
-    private final HashMap<Integer, Task> allTask;
+    protected final HashMap<Integer, Epic> allEpic;
+    protected final HashMap<Integer, Subtask> allSubtask;
+    protected final HashMap<Integer, Task> allTask;
     private final HistoryManager historyManager;
     private int taskId;
 
@@ -122,7 +122,7 @@ public class InMemoryTaskManager implements TaskManager {
         return false;
     } // Обновляем эпик.
 
-    private void updateStatusEpic(Epic epic) {
+    protected void updateStatusEpic(Epic epic) {
         if (epic.getSubtasks().isEmpty()) {
             epic.setStatus(TaskStatus.NEW);
         } else {

@@ -43,5 +43,6 @@ public class Main {
 
         taskManager.removalEpic(3);
         System.out.println("Все задачи в истории. " + taskManager.getHistory());
+
     }
 }
