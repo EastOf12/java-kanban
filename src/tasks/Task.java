@@ -1,14 +1,22 @@
 package tasks;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
+
 public class Task {
+    protected LocalDateTime startTime;
+    protected Duration duration;
     private String title;
     private String description;
     private int idTask;
     private TaskStatus status;
 
-    public Task(String title, String description) {
+
+    public Task(String title, String description, LocalDateTime startTime, Duration duration) {
         this.title = title;
         this.description = description;
+        this.startTime = startTime;
+        this.duration = duration;
         status = TaskStatus.NEW;
     }
 
@@ -48,6 +56,18 @@ public class Task {
         this.status = status;
     }
 
+    public LocalDateTime getEndTime() {
+        return startTime.plus(duration);
+    }
+
+    public LocalDateTime getStartTime() {
+        return startTime;
+    }
+
+    public Duration getDuration() {
+        return duration;
+    }
+
     @Override
     public boolean equals(Object object) {
         if (this == object) return true;
@@ -77,6 +97,9 @@ public class Task {
                 ", description='" + description + '\'' +
                 ", idTask= '" + idTask + '\'' +
                 ", status='" + status +
+                ", startTime=" + startTime +
+                ", endTime=" + startTime.plus(duration) +
+                ", duration=" + duration +
                 "'}";
     }
 

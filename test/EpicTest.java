@@ -12,5 +12,4 @@ public class EpicTest {
         epicExpected.setIdTask(1);
         Assertions.assertEquals(epicExpected, epicActual, "Таски с одинаковыми id не равны");
     }
-
 }
