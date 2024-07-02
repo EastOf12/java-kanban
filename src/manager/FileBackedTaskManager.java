@@ -38,10 +38,12 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                         fileBackedTaskManager.allEpic.put(task.getIdTask(), (Epic) task);
                     } else if (task.getTaskType().equals(TaskType.SUBTASK)) {
                         Subtask subtask = (Subtask) task;
+                        fileBackedTaskManager.prioritizedTasks.add(subtask);
                         fileBackedTaskManager.allSubtask.put(task.getIdTask(), subtask);
                         Epic epic = fileBackedTaskManager.allEpic.get(subtask.getIdEpic());
                         epic.setSubtasks(subtask.getIdTask());
                     } else {
+                        fileBackedTaskManager.prioritizedTasks.add(task);
                         fileBackedTaskManager.allTask.put(task.getIdTask(), task);
                     }
                 }
@@ -169,13 +171,6 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
             }
         } catch (IOException exception) {
             throw new ManagerSaveException("Ошибка при сохранении файла: " + exception.getMessage());
-        }
-    }
-
-
-    public static class ManagerSaveException extends RuntimeException {
-        private ManagerSaveException(final String message) {
-            super(message);
         }
     }
 }

@@ -46,28 +46,42 @@ public abstract class TaskManagerTest<T extends TaskManager> {
     }
 
     @Test
-    public void shouldReturnPositiveWhenCheckTaskIntersectionsIsCorrect() {
-        //Пересечение в начале
-        Assertions.assertTrue(taskManager.checkTaskIntersections(new Task("Найти работу", "Найти работу с зарплатой 1000к"
-                , LocalDateTime.of(2024, 12, 29, 23, 58)
-                , Duration.ofDays(2))), "Таски не должны пересекаться по времени");
-        Assertions.assertFalse(taskManager.checkTaskIntersections(new Task("Найти работу", "Найти работу с зарплатой 1000к"
-                , LocalDateTime.of(2024, 12, 29, 23, 59)
-                , Duration.ofDays(2))), "");
+    public void shouldReturnPositiveWhenCheckTaskIntersectionsIsCorrect() throws IOException {
+        //Тут нужно будет проверять, пытаясь создать задачи. Если дата корректная, то создалось нормально и тд.
+        T taskManager = createTaskManager();
+        Task task = new Task("Найти работу", "Найти работу с зарплатой 1000к"
+                , LocalDateTime.of(2025, 2, 5, 0, 0)
+                , Duration.ofDays(2));
+        taskManager.createTask(task);
 
-        //Пересечение в середине
-        Assertions.assertFalse(taskManager.checkTaskIntersections(new Task("Найти работу", "Найти работу с зарплатой 1000к"
-                , LocalDateTime.of(2025, 1, 1, 23, 59)
-                , Duration.ofDays(2))), "Таски должны пересекаться по времени");
+        //Проверяем что есть один созданный таск в списке приоритетов.
+        Assertions.assertEquals(taskManager.getPrioritizedTasks().size(), 1, "Должен быть 1 таск.");
 
-        //Пересечение в конце
-        Assertions.assertTrue(taskManager.checkTaskIntersections(new Task("Найти работу", "Найти работу с зарплатой 1000к"
-                , LocalDateTime.of(2025, 1, 3, 0, 0)
-                , Duration.ofDays(2))), "Таски не должны пересекаться по времени");
+        //Пытаемся создать таск в начале.
+        taskManager.createTask(new Task("Построить дом", "Построить дом из мрамора"
+                , LocalDateTime.of(2025, 2, 5, 0, 0)
+                , Duration.ofDays(2)));
 
-        Assertions.assertFalse(taskManager.checkTaskIntersections(new Task("Найти работу", "Найти работу с зарплатой 1000к"
-                , LocalDateTime.of(2025, 1, 2, 23, 59)
-                , Duration.ofDays(2))), "Таски должны пересекаться по времени");
+        //Пытаемся создать таск в середине.
+        taskManager.createTask(new Task("Построить дом", "Построить дом из мрамора"
+                , LocalDateTime.of(2025, 2, 6, 0, 1)
+                , Duration.ofDays(2)));
+
+        //Пытаемся создать таск в конце.
+        taskManager.createTask(new Task("Построить дом", "Построить дом из мрамора"
+                , LocalDateTime.of(2025, 2, 7, 0, 0)
+                , Duration.ofDays(2)));
+
+        //Проверяем что нет созданных тасков
+        Assertions.assertEquals(taskManager.getPrioritizedTasks().size(), 1, "Должен быть 1 таск.");
+
+        //Создаем таск, который не пересекается по времени.
+        taskManager.createTask(new Task("Построить дом", "Построить дом из мрамора"
+                , LocalDateTime.of(2025, 2, 7, 0, 1)
+                , Duration.ofDays(2)));
+
+        //Проверяем что теперь 2 созданных таска в списке приоритетов.
+        Assertions.assertEquals(taskManager.getPrioritizedTasks().size(), 2, "Должно быть 2 таска.");
     }
 
     @Test

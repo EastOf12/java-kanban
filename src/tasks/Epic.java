@@ -3,7 +3,6 @@ package tasks;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 public class Epic extends Task {
     private ArrayList<Integer> subtasks;
@@ -44,46 +43,8 @@ public class Epic extends Task {
         return subtasks.equals(epic.subtasks);
     }
 
-    public void setEndTime(Subtask subtask, String action, HashMap<Integer, Subtask> allSubtask) {
-        if (action.equals("add")) {
-            //Увеличиваем общее время выполнения эпика
-            duration = duration.plus(subtask.duration);
-
-            //Корректируем дату начала и завершения эпика.
-            if (subtask.getEndTime().isAfter(endTime)) {
-                endTime = subtask.getEndTime();
-            }
-
-            if (subtask.startTime.isBefore(startTime)) {
-                startTime = subtask.startTime;
-            }
-
-        } else {
-            //Уменьшаем общее время выполнения эпика.
-
-            duration = duration.minus(subtask.duration);
-
-            //Корректируем endTime при необходимости.
-            if (subtask.getEndTime().equals(endTime)) {
-                endTime = null;
-                for (int taskID : subtasks) {
-                    LocalDateTime subtaskEndTime = allSubtask.get(taskID).getEndTime();
-                    if (endTime == null || endTime.isBefore(subtaskEndTime)) {
-                        endTime = subtaskEndTime;
-                    }
-                }
-            }
-
-            if (subtask.startTime.equals(startTime)) {
-                startTime = null;
-                for (int taskID : subtasks) {
-                    LocalDateTime subtaskStartTime = allSubtask.get(taskID).startTime;
-                    if (startTime == null || startTime.isAfter(subtaskStartTime)) {
-                        startTime = subtaskStartTime;
-                    }
-                }
-            }
-        }
+    public void setEndTime(LocalDateTime endTimeNew) {
+        endTime = endTimeNew;
     }
 
     public void setStartTime(LocalDateTime newStartTime) {

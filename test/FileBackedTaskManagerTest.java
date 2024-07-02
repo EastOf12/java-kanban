@@ -1,4 +1,5 @@
 import manager.FileBackedTaskManager;
+import manager.ManagerSaveException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import tasks.Epic;
@@ -52,7 +53,7 @@ public class FileBackedTaskManagerTest extends TaskManagerTest<FileBackedTaskMan
                 , Duration.ofDays(2));
         Epic epic = new Epic("Построить мир", "Организовать мир во всем мире.");
         Subtask subtask = new Subtask("Убрать войны", "Убрать все оружие в мире", 2
-                , LocalDateTime.of(2022, 12, 31, 23, 59)
+                , LocalDateTime.of(2019, 12, 31, 23, 59)
                 , Duration.ofDays(2));
         fileBackedTaskManager.createTask(task);
         fileBackedTaskManager.createEpic(epic);
@@ -66,6 +67,8 @@ public class FileBackedTaskManagerTest extends TaskManagerTest<FileBackedTaskMan
                 "должны быть одинаковыми.");
         assertEquals(fileBackedTaskManager.getAllSubtask(), newFileBackedTaskManager.getAllSubtask(),
                 "Подзадачи должны быть одинаковыми.");
+        assertEquals(fileBackedTaskManager.getPrioritizedTasks(), newFileBackedTaskManager.getPrioritizedTasks(),
+                "Отсортированные по приоритету списки должны быть равны");
     }
 
     @Test
@@ -74,7 +77,7 @@ public class FileBackedTaskManagerTest extends TaskManagerTest<FileBackedTaskMan
         FileBackedTaskManager fileBackedTaskManager = new FileBackedTaskManager(tempFile);
 
         // Проверка для несуществующего пути
-        assertThrows(FileBackedTaskManager.ManagerSaveException.class, () -> {
+        assertThrows(ManagerSaveException.class, () -> {
             fileBackedTaskManager.save(tempFile);
         });
     }

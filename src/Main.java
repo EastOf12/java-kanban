@@ -31,7 +31,7 @@ public class Main {
 
         //Подзадачи
         Subtask subtask1 = new Subtask("Убрать войны", "Убрать все оружие в мире",
-                3, LocalDateTime.of(2022, 12, 1, 1, 1, 1), Duration.ofDays(2));
+                3, LocalDateTime.of(2025, 12, 1, 1, 1, 1), Duration.ofDays(2));
         Subtask subtask2 = new Subtask("Дать всем еды", "Накормить всех", 3,
                 LocalDateTime.of(2021, 12, 1, 1, 1, 1), Duration.ofDays(2));
         Subtask subtask3 = new Subtask("Раздать конфеты", "Сделать мир слаще", 3,
@@ -49,8 +49,7 @@ public class Main {
         taskManager.getTask(2);
         taskManager.getEpic(3);
 
-        taskManager.removalEpic(3);
-        System.out.println("Все задачи в истории. " + taskManager.getHistory());
+        System.out.println(taskManager.getAllEpic());
 
     }
 }
