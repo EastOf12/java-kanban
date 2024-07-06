@@ -5,6 +5,7 @@ import tasks.Subtask;
 import tasks.Task;
 import tasks.TaskStatus;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -95,8 +96,14 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void clearAllEpic() {
+        for (Epic epic : allEpic.values()) {
+            removeAllSubtasksEpic(epic); //Удаляем все подзадачи по эпику из всех списков.
+            historyManager.remove(epic.getIdTask()); //Удаляем эпик из истории.
+        }
+
         allSubtask.clear();
         allEpic.clear();
+
     } // Очистить все эпики.
 
     @Override
@@ -120,12 +127,7 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public boolean removalEpic(int idTask) {
         if (allEpic.containsKey(idTask)) {
-            for (Integer idSubtask : getEpicRemove(idTask).getSubtasks()) {
-                Subtask subtask = allSubtask.get(idSubtask);
-                allSubtask.remove(idSubtask);
-                historyManager.remove(idSubtask);
-                prioritizedTasks.remove(subtask);
-            }
+            removeAllSubtasksEpic(getEpicRemove(idTask));
             historyManager.remove(idTask);
             allEpic.remove(idTask);
             return true;
@@ -294,9 +296,6 @@ public class InMemoryTaskManager implements TaskManager {
 
     private void setEndTime(Epic epic, Subtask subtask, String action, HashMap<Integer, Subtask> allSubtask) {
         if (action.equals("add")) {
-            //Увеличиваем общее время выполнения эпика
-            epic.setDuration(epic.getDuration().plus(subtask.getDuration()));
-
             //Корректируем дату начала и завершения эпика.
             if (subtask.getEndTime().isAfter(epic.getEndTime())) {
                 epic.setEndTime(subtask.getEndTime());
@@ -307,10 +306,7 @@ public class InMemoryTaskManager implements TaskManager {
             }
 
         } else {
-            //Уменьшаем общее время выполнения эпика.
-            epic.setDuration(epic.getDuration().minus(subtask.getDuration()));
-
-            //Корректируем endTime при необходимости.
+            //Корректируем endTime и startTime при необходимости.
             if (subtask.getEndTime().equals(epic.getEndTime())) {
                 epic.setEndTime(null);
                 for (int taskID : epic.getSubtasks()) {
@@ -318,19 +314,27 @@ public class InMemoryTaskManager implements TaskManager {
                     if (epic.getEndTime() == null || epic.getEndTime().isBefore(subtaskEndTime)) {
                         epic.setEndTime(subtaskEndTime);
                     }
-                }
-            }
 
-            if (subtask.getStartTime().equals(epic.getStartTime())) {
-                epic.setStartTime(null);
-                for (int taskID : epic.getSubtasks()) {
-                    LocalDateTime subtaskStartTime = allSubtask.get(taskID).getStartTime();
-                    if (epic.getStartTime() == null || epic.getStartTime().isAfter(subtaskStartTime)) {
-                        epic.setStartTime(subtaskStartTime);
+                    if (subtask.getStartTime().equals(epic.getStartTime())) {
+                        epic.setStartTime(null);
+                        LocalDateTime subtaskStartTime = allSubtask.get(taskID).getStartTime();
+                        if (epic.getStartTime() == null || epic.getStartTime().isAfter(subtaskStartTime)) {
+                            epic.setStartTime(subtaskStartTime);
+                        }
                     }
                 }
             }
         }
 
+        epic.setDuration(Duration.between(epic.getStartTime(), epic.getEndTime())); //Корректируем время выполнения эпика.
     } //Корректирует время начала и завершения эпика при добавлении или удалении подзадачь.
+
+    private void removeAllSubtasksEpic(Epic epic) {
+        for (Integer idSubtask : epic.getSubtasks()) {
+            Subtask subtask = allSubtask.get(idSubtask);
+            allSubtask.remove(idSubtask);
+            historyManager.remove(idSubtask);
+            prioritizedTasks.remove(subtask);
+        }
+    } //Удаляет все подзадачи у эпика из всех списков.
 }

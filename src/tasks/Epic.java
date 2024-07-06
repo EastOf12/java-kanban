@@ -43,10 +43,6 @@ public class Epic extends Task {
         return subtasks.equals(epic.subtasks);
     }
 
-    public void setEndTime(LocalDateTime endTimeNew) {
-        endTime = endTimeNew;
-    }
-
     public void setStartTime(LocalDateTime newStartTime) {
         startTime = newStartTime;
     }
@@ -55,6 +51,14 @@ public class Epic extends Task {
         duration = newDuration;
     }
 
+    @Override
+    public LocalDateTime getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(LocalDateTime endTimeNew) {
+        endTime = endTimeNew;
+    }
 
     @Override
     public int hashCode() {
