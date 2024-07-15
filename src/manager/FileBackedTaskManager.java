@@ -1,6 +1,9 @@
 package manager;
 
-import tasks.*;
+import tasks.Epic;
+import tasks.Subtask;
+import tasks.Task;
+import tasks.TaskType;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -35,10 +38,12 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                         fileBackedTaskManager.allEpic.put(task.getIdTask(), (Epic) task);
                     } else if (task.getTaskType().equals(TaskType.SUBTASK)) {
                         Subtask subtask = (Subtask) task;
+                        fileBackedTaskManager.prioritizedTasks.add(subtask);
                         fileBackedTaskManager.allSubtask.put(task.getIdTask(), subtask);
                         Epic epic = fileBackedTaskManager.allEpic.get(subtask.getIdEpic());
                         epic.setSubtasks(subtask.getIdTask());
                     } else {
+                        fileBackedTaskManager.prioritizedTasks.add(task);
                         fileBackedTaskManager.allTask.put(task.getIdTask(), task);
                     }
                 }
@@ -131,14 +136,14 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         return result;
     }
 
+
     public void save(File file) {
-        final String FIRST_LINE_TEXT = "id,type,name,status,description,epic";
+        final String FIRST_LINE_TEXT = "id,type,name,status,description,startDate,startTime,duration,epic";
         ArrayList<String> allTaskSave = new ArrayList<>();
         Path path = file.toPath();
 
-        if (!Files.exists(path)) {
-            System.out.println("Введённый путь не существует.");
-        } else {
+        //Записываем в файл.
+        try (BufferedWriter writer = Files.newBufferedWriter(path)) {
             allTaskSave.add(FIRST_LINE_TEXT);
 
             //Сохрнаяем в файл все задачи типа Task.
@@ -156,25 +161,16 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                 allTaskSave.add(TaskStringManager.taskToString(subtask, TaskType.SUBTASK));
             }
 
-            //Записываем в файл.
-            try (BufferedWriter writer = Files.newBufferedWriter(path)) {
-                if (allTaskSave.size() == 1) {
-                    writer.write("");
-                    return;
-                }
-                for (String task : allTaskSave) {
-                    writer.write(task);
-                    writer.newLine(); // Добавление новой строки после каждой записи
-                }
-            } catch (IOException exception) {
-                throw new ManagerSaveException("Ошибка при сохранении файла: " + exception.getMessage());
+            if (allTaskSave.size() == 1) {
+                writer.write("");
+                return;
             }
-        }
-    }
-
-    private static class ManagerSaveException extends RuntimeException {
-        private ManagerSaveException(final String message) {
-            super(message);
+            for (String task : allTaskSave) {
+                writer.write(task);
+                writer.newLine(); // Добавление новой строки после каждой записи
+            }
+        } catch (IOException exception) {
+            throw new ManagerSaveException("Ошибка при сохранении файла: " + exception.getMessage());
         }
     }
 }
