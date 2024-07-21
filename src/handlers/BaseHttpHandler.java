@@ -12,7 +12,7 @@ import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.time.LocalDateTime;
 
-abstract public class BaseHttpHandler {
+abstract class BaseHttpHandler {
     protected TaskManager taskManager;
     protected String method;
     protected String patch;
