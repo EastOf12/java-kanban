@@ -11,19 +11,12 @@ public class PrioritizedHandler extends BaseHttpHandler implements HttpHandler {
         super(taskManager);
     }
 
-    @Override
+
     protected void getTasks(HttpExchange httpExchange) throws IOException {
         String json = gson.toJson(taskManager.getPrioritizedTasks());
         sendAnswer(httpExchange, json, 200, contentTypeJson);
     }
 
-    @Override
-    protected void postTask(HttpExchange httpExchange) throws IOException {
-    }
-
-    @Override
-    protected void deleteTask(HttpExchange httpExchange) throws IOException {
-    }
 
     @Override
     public void handle(HttpExchange httpExchange) throws IOException {

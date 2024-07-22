@@ -12,18 +12,9 @@ public class HistoryHandler extends BaseHttpHandler implements HttpHandler {
         super(taskManager);
     }
 
-    @Override
     protected void getTasks(HttpExchange httpExchange) throws IOException {
         String json = gson.toJson(taskManager.getHistory());
         sendAnswer(httpExchange, json, 200, contentTypeJson);
-    }
-
-    @Override
-    protected void postTask(HttpExchange httpExchange) throws IOException {
-    }
-
-    @Override
-    protected void deleteTask(HttpExchange httpExchange) throws IOException {
     }
 
     @Override

@@ -2,16 +2,17 @@ package handlers;
 
 import com.google.gson.JsonSyntaxException;
 import com.sun.net.httpserver.HttpExchange;
-import com.sun.net.httpserver.HttpHandler;
 import manager.TaskManager;
 import tasks.Epic;
+import tasks.Subtask;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.List;
 
-public class EpicHandler extends BaseHttpHandler implements HttpHandler {
+public class EpicHandler extends BaseHttpHandler implements Handler {
     public EpicHandler(TaskManager taskManager) {
         super(taskManager);
     }
@@ -45,14 +46,24 @@ public class EpicHandler extends BaseHttpHandler implements HttpHandler {
             if (writeTaskID(httpExchange, pathSegments)) {
                 return; // Некорректно подан id.
             }
-            ;
 
             Epic epic = taskManager.getEpic(taskId);
 
             //Отправляем ответ.
             if (epic != null) {
-                String json = gson.toJson(epic);
-                sendAnswer(httpExchange, json, 200, contentTypeJson);
+                if (pathSegments.length == 4 && pathSegments[3].equals("subtasks")) {
+                    List<Subtask> subtasks = taskManager.getAllSubtask().stream()
+                            .filter(subtask -> subtask.getIdEpic() == epic.getIdTask())
+                            .toList();
+
+                    String json = gson.toJson(subtasks);
+                    sendAnswer(httpExchange, json, 200, contentTypeJson);
+                } else if (pathSegments.length == 4) {
+                    sendAnswer(httpExchange, "Bad Request", 400, contentTypeText);
+                } else {
+                    String json = gson.toJson(epic);
+                    sendAnswer(httpExchange, json, 200, contentTypeJson);
+                }
             } else {
                 sendAnswer(httpExchange, "Epic not found", 404, contentTypeText);
             }
@@ -113,7 +124,6 @@ public class EpicHandler extends BaseHttpHandler implements HttpHandler {
             if (writeTaskID(httpExchange, pathSegments)) {
                 return; // Некорректно подан id эпика.
             }
-            ;
 
             //Отправляем ответ.
             if (taskManager.removalEpic(taskId)) {
@@ -122,8 +132,9 @@ public class EpicHandler extends BaseHttpHandler implements HttpHandler {
                 sendAnswer(httpExchange, "Epic not found", 404, contentTypeText);
             }
         } else {
-            //Не получили id эпика, который нужно удалить
-            sendAnswer(httpExchange, "Bad Request", 400, contentTypeText);
+            //Удаляем все эпики и их подзадачи.
+            taskManager.clearAllEpic();
+            sendAnswer(httpExchange, "Epics deleted", 200, contentTypeText);
         }
     }
 }

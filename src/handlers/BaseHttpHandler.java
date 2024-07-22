@@ -5,6 +5,7 @@ import adapters.LocalDateTimeAdapter;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.sun.net.httpserver.HttpExchange;
+import com.sun.net.httpserver.HttpHandler;
 import manager.TaskManager;
 
 import java.io.IOException;
@@ -12,7 +13,7 @@ import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.time.LocalDateTime;
 
-abstract class BaseHttpHandler {
+abstract class BaseHttpHandler implements HttpHandler {
     protected TaskManager taskManager;
     protected String method;
     protected String patch;
@@ -51,10 +52,4 @@ abstract class BaseHttpHandler {
 
         return !result;
     } //Проверяем корретность заполнения id Таска.
-
-    protected abstract void getTasks(HttpExchange httpExchange) throws IOException;
-
-    protected abstract void postTask(HttpExchange httpExchange) throws IOException;
-
-    protected abstract void deleteTask(HttpExchange httpExchange) throws IOException;
 }

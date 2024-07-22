@@ -245,6 +245,44 @@ public class HttpTaskServerTest {
         checkGetErrorCodes("tasks", 2);
     }
 
+    @Test
+    public void shouldReturnPositiveWhenDeleteAllTasksIsCorrect() throws IOException, InterruptedException {
+        //Создаем задачи
+        //Обычные задачи
+        Task task1 = new Task("Найти работу", "Найти работу с зарплатой 1000к",
+                LocalDateTime.of(2024, 12, 1, 1, 1, 1), Duration.ofDays(2));
+        Task task2 = new Task("Сходить в магазин", "Купить еду в магазине",
+                LocalDateTime.of(2023, 12, 1, 1, 1, 1), Duration.ofDays(2));
+
+        taskManager.createTask(task1);
+        taskManager.createTask(task2);
+
+        //Проверяем количество задач до удаления.
+        Assertions.assertEquals(taskManager.getAllTask().size(), 2, "Должна быть одно задача");
+
+        //Отправляем запрос и получаем ответ.
+        URI uri = URI.create("http://localhost:8080/tasks");
+        HttpRequest httpRequest = HttpRequest.newBuilder()
+                .DELETE()
+                .uri(uri)
+                .version(HttpClient.Version.HTTP_1_1)
+                .header("Accept", "text/html")
+                .build();
+
+        HttpClient httpClient = HttpClient.newHttpClient();
+        HttpResponse.BodyHandler<String> handler = HttpResponse.BodyHandlers.ofString();
+        HttpResponse<String> response = httpClient.send(httpRequest, handler);
+
+        //Проверяем код на корректность.
+        Assertions.assertEquals(response.statusCode(), 200, "Код ответа должен быть равен 200.");
+
+        //Проверяем удалилиась ли задача
+        Assertions.assertEquals(taskManager.getAllTask().size(), 0, "Не должно быть задач");
+
+        //Проверяем коды ошибок.
+        checkGetErrorCodes("tasks", 2);
+    }
+
     //Тесты для subtasks
     @Test
     public void shouldReturnPositiveWhenGetSubtasksIsCorrect() throws IOException, InterruptedException {
@@ -454,6 +492,45 @@ public class HttpTaskServerTest {
         checkGetErrorCodes("subtasks", 3);
     }
 
+    @Test
+    public void shouldReturnPositiveWhenDeleteAllSubtasksIsCorrect() throws IOException, InterruptedException {
+        //Создаем задачи
+        Epic epic = new Epic("Построить мир", "Организовать мир во всем мире.");
+        taskManager.createEpic(epic);
+
+        //Создаем подзадачи
+        Subtask subtask1 = new Subtask("Убрать войны", "Убрать все оружие в мире",
+                1, LocalDateTime.of(2025, 12, 1, 1, 1, 1), Duration.ofDays(2));
+        Subtask subtask2 = new Subtask("Дать всем еды", "Накормить всех", 1,
+                LocalDateTime.of(2021, 12, 1, 1, 1, 1), Duration.ofDays(2));
+        taskManager.createSubtask(subtask1);
+        taskManager.createSubtask(subtask2);
+
+        //Проверяем количество задач до удаления.
+        Assertions.assertEquals(taskManager.getAllSubtask().size(), 2, "Должно быть две подзадачи.");
+
+        //Отправляем запрос и получаем ответ.
+        URI uri = URI.create("http://localhost:8080/subtasks");
+        HttpRequest httpRequest = HttpRequest.newBuilder()
+                .DELETE()
+                .uri(uri)
+                .version(HttpClient.Version.HTTP_1_1)
+                .header("Accept", "text/html")
+                .build();
+
+        HttpClient httpClient = HttpClient.newHttpClient();
+        HttpResponse<String> response = httpClient.send(httpRequest, HttpResponse.BodyHandlers.ofString());
+
+        //Проверяем код на корректность.
+        Assertions.assertEquals(response.statusCode(), 200, "Код ответа должен быть равен 200.");
+
+        //Проверяем удалилиась ли задача
+        Assertions.assertEquals(taskManager.getAllSubtask().size(), 0, "Не должно быть подзадач");
+
+        //Проверяем коды ошибок.
+        checkGetErrorCodes("subtasks", 3);
+    }
+
     //Тесты для epics
     @Test
     public void shouldReturnPositiveWhenGetEpicsIsCorrect() throws IOException, InterruptedException {
@@ -629,6 +706,109 @@ public class HttpTaskServerTest {
 
         //Проверяем коды ошибок.
         checkGetErrorCodes("epics", 2);
+    }
+
+    @Test
+    public void shouldReturnPositiveWhenDeleteAllEpicsIsCorrect() throws IOException, InterruptedException {
+        //Создаем задачи
+        Epic epic = new Epic("Построить мир", "Организовать мир во всем мире.");
+        taskManager.createEpic(epic);
+
+        //Подзадачи
+        Subtask subtask1 = new Subtask("Убрать войны", "Убрать все оружие в мире",
+                1, LocalDateTime.of(2025, 12, 1, 1, 1, 1), Duration.ofDays(2));
+        Subtask subtask2 = new Subtask("Дать всем еды", "Накормить всех", 1,
+                LocalDateTime.of(2021, 12, 1, 1, 1, 1), Duration.ofDays(2));
+        taskManager.createSubtask(subtask1);
+        taskManager.createSubtask(subtask2);
+
+        //Проверяем количество задач до удаления.
+        Assertions.assertEquals(taskManager.getAllEpic().size(), 1, "Должен быть один эпик.");
+        Assertions.assertEquals(taskManager.getAllSubtask().size(), 2, "Должно быть 2 подзадачи.");
+
+        //Отправляем запрос и получаем ответ.
+        URI uri = URI.create("http://localhost:8080/epics");
+        HttpRequest httpRequest = HttpRequest.newBuilder()
+                .DELETE()
+                .uri(uri)
+                .version(HttpClient.Version.HTTP_1_1)
+                .header("Accept", "text/html")
+                .build();
+
+        HttpClient httpClient = HttpClient.newHttpClient();
+        HttpResponse<String> response = httpClient.send(httpRequest, HttpResponse.BodyHandlers.ofString());
+
+        //Проверяем код на корректность.
+        Assertions.assertEquals(response.statusCode(), 200, "Код ответа должен быть равен 200.");
+
+        //Проверяем удалился ли эпик
+        Assertions.assertEquals(taskManager.getAllEpic().size(), 0, "Не должно быть эпиков");
+        Assertions.assertEquals(taskManager.getAllSubtask().size(), 0, "Должно быть подзадач");
+
+        //Проверяем коды ошибок.
+        checkGetErrorCodes("epics", 2);
+    }
+
+    @Test
+    public void shouldReturnPositiveWhenGetEpicsSubtasksIsCorrect() throws IOException, InterruptedException {
+
+        //Создаем эпики
+        Epic epic = new Epic("Построить мир", "Организовать мир во всем мире.");
+        taskManager.createEpic(epic);
+
+        //Подзадачи
+        Subtask subtask1 = new Subtask("Убрать войны", "Убрать все оружие в мире",
+                1, LocalDateTime.of(2025, 12, 1, 1, 1, 1), Duration.ofDays(2));
+        Subtask subtask2 = new Subtask("Дать всем еды", "Накормить всех", 1,
+                LocalDateTime.of(2021, 12, 1, 1, 1, 1), Duration.ofDays(2));
+
+        taskManager.createSubtask(subtask1);
+        taskManager.createSubtask(subtask2);
+
+
+        //Отправляем запрос.
+        URI uri = URI.create("http://localhost:8080/epics/1/subtasks");
+        HttpRequest httpRequest = HttpRequest.newBuilder()
+                .GET()
+                .uri(uri)
+                .version(HttpClient.Version.HTTP_1_1)
+                .header("Accept", "text/html")
+                .build();
+
+        HttpClient httpClient = HttpClient.newHttpClient();
+        HttpResponse.BodyHandler<String> handler = HttpResponse.BodyHandlers.ofString();
+
+        HttpResponse<String> response = httpClient.send(httpRequest, handler);
+
+        //Проверяем код ответа.
+        Assertions.assertEquals(response.statusCode(), 200, "Код ответа должен быть равен 200.");
+
+        //Проверям корректность ответа.
+        Type subtasksListType = new TypeToken<ArrayList<Subtask>>() {
+        }.getType();
+
+        ArrayList<Subtask> subtasks = gson.fromJson(response.body(), subtasksListType);
+        Assertions.assertEquals(subtasks.getFirst(), taskManager.getSubtask(2)
+                , "Подзадачи должны быть равны");
+        Assertions.assertEquals(subtasks.getLast(), taskManager.getSubtask(3)
+                , "Подзадачи должны быть равны");
+
+        //Отправляем запрос.
+        uri = URI.create("http://localhost:8080/epics/1/subtasksErorror");
+        httpRequest = HttpRequest.newBuilder()
+                .GET()
+                .uri(uri)
+                .version(HttpClient.Version.HTTP_1_1)
+                .header("Accept", "text/html")
+                .build();
+
+        httpClient = HttpClient.newHttpClient();
+        handler = HttpResponse.BodyHandlers.ofString();
+
+        response = httpClient.send(httpRequest, handler);
+
+        //Проверяем код ответа.
+        Assertions.assertEquals(response.statusCode(), 400, "Код ответа должен быть равен 400.");
     }
 
     //Тесты для history

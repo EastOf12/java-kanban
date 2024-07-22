@@ -2,7 +2,6 @@ package handlers;
 
 import com.google.gson.JsonSyntaxException;
 import com.sun.net.httpserver.HttpExchange;
-import com.sun.net.httpserver.HttpHandler;
 import manager.TaskManager;
 import tasks.Epic;
 import tasks.Subtask;
@@ -12,7 +11,7 @@ import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 
-public class SubtaskHandler extends BaseHttpHandler implements HttpHandler {
+public class SubtaskHandler extends BaseHttpHandler implements Handler {
     public SubtaskHandler(TaskManager taskManager) {
         super(taskManager);
     }
@@ -150,9 +149,10 @@ public class SubtaskHandler extends BaseHttpHandler implements HttpHandler {
             } else {
                 sendAnswer(httpExchange, "Subtask not found", 404, contentTypeText);
             }
+
         } else {
-            //Не получили id таска, который нужно удалить
-            sendAnswer(httpExchange, "Bad Request", 400, contentTypeText);
+            taskManager.clearAllSubtask();
+            sendAnswer(httpExchange, "Subtasks deleted", 200, contentTypeText);
         }
     }
 

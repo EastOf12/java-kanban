@@ -2,7 +2,6 @@ package handlers;
 
 import com.google.gson.JsonSyntaxException;
 import com.sun.net.httpserver.HttpExchange;
-import com.sun.net.httpserver.HttpHandler;
 import manager.TaskManager;
 import tasks.Task;
 
@@ -11,7 +10,7 @@ import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 
-public class TasksHandler extends BaseHttpHandler implements HttpHandler {
+public class TasksHandler extends BaseHttpHandler implements Handler {
 
     public TasksHandler(TaskManager taskManager) {
         super(taskManager);
@@ -46,7 +45,6 @@ public class TasksHandler extends BaseHttpHandler implements HttpHandler {
             if (writeTaskID(httpExchange, pathSegments)) {
                 return; // Некорректно подан id таска.
             }
-            ;
 
             //Получаем таск.
             Task task = taskManager.getTask(taskId);
@@ -89,7 +87,6 @@ public class TasksHandler extends BaseHttpHandler implements HttpHandler {
             if (writeTaskID(httpExchange, pathSegments)) {
                 return; // Некорректно подан id таска.
             }
-            ;
 
             if (taskManager.getTask(taskId) != null) {
                 //Нашли таск, который нужно обновить.
@@ -139,8 +136,8 @@ public class TasksHandler extends BaseHttpHandler implements HttpHandler {
                 sendAnswer(httpExchange, "Task not found", 404, contentTypeText);
             }
         } else {
-            //Не получили id таска, который нужно удалить
-            sendAnswer(httpExchange, "Bad Request", 400, contentTypeText);
+            taskManager.clearAllTask();
+            sendAnswer(httpExchange, "Tasks deleted", 200, contentTypeText);
         }
     }
 }
