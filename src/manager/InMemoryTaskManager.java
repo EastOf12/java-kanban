@@ -46,6 +46,7 @@ public class InMemoryTaskManager implements TaskManager {
     public void createTask(Task task) {
         taskId = addTaskID();
         task.setIdTask(taskId);
+        task.setStatus(TaskStatus.NEW);
         allTask.put(taskId, task);
 
         if (checkTaskIntersections(task) && task.getStartTime() != null) {
@@ -198,6 +199,7 @@ public class InMemoryTaskManager implements TaskManager {
         if (allEpic.containsKey(idEpicSubtask)) {
             taskId = addTaskID();
             subtask.setIdTask(taskId);
+            subtask.setStatus(TaskStatus.NEW);
             allSubtask.put(taskId, subtask);
             Epic epic = allEpic.get(idEpicSubtask);
             epic.setSubtasks(subtask.getIdTask());

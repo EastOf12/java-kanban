@@ -24,6 +24,10 @@ public class Epic extends Task {
 
     public void removeIdSubtasks(Integer idSubtask) {
         subtasks.remove(idSubtask);
+
+        if (subtasks.isEmpty()) {
+            endTime = startTime;
+        }
     }
 
     public void removeAllSubtasks() {
